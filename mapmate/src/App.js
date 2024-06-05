@@ -1,9 +1,7 @@
 import { useEffect } from "react";
-import config from "./apikey.js";
 
 const { kakao } = window;
 function App() {
-  const key = config.KAKAO_API_KEY;
   useEffect(() => {
     const container = document.getElementById("map");
     const options = {

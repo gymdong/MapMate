@@ -4,7 +4,12 @@ import { useState, useRef } from "react";
 import { authService } from "fbase";
 import Sidebar from "./sidebar";
 import style from "./home.module.css";
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Auth from "routes/Auth";
+import Home from "routes/Home";
+import Profile from "routes/Profile";
+import Friend from "routes/Friend";
+import Alert from "routes/Alert";
 const { kakao } = window;
 function App() {
   console.log(authService.currentUser);
@@ -30,23 +35,40 @@ function App() {
     };
     const map = new kakao.maps.Map(container, options);
   }, []);*/
+  {
+    /*<p style={{ fontSize: 50, textAlign: "center" }}>Sample Page</p>
+        <div id="map" style={{ width: 500, height: 400 }}></div>*/
+  }
   return (
     <div
       style={{ width: "100%", minHeight: "100vh" }}
       className={style.container}
     >
-      <div id="container">
-        <p className={style.headerText}>MapMate</p>
-        {/*<p style={{ fontSize: 50, textAlign: "center" }}>Sample Page</p>
-        <div id="map" style={{ width: 500, height: 400 }}></div>*/}
-        {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
-        <footer>&copy; {new Date().getFullYear()} MapMate</footer>
-      </div>
-      <Sidebar width={320}>
-        <span>여기에 메뉴 구성하기</span>
-      </Sidebar>
+      <BrowserRouter>
+        <div id="container">
+          {!isLoggedIn ? <p className={style.headerText}>MapMate</p> : <></>}
+          <Routes>
+            {isLoggedIn ? (
+              <>
+                <Route exact path="/" element={<Home />}></Route>
+                <Route exact path="/friend" element={<Friend />}></Route>
+                <Route exact path="/alert" element={<Alert />}></Route>
+                <Route exact path="/profile" element={<Profile />}></Route>
+              </>
+            ) : (
+              <Route exact path="/" element={<></>}></Route>
+            )}
+          </Routes>
+          {isLoggedIn ? <></> : <Auth />}
+        </div>
+        <Sidebar width={320}>
+          <span>여기에 메뉴 구성하기</span>
+          {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
+        </Sidebar>
+      </BrowserRouter>
     </div>
   );
 }
+//<footer>&copy; {new Date().getFullYear()} MapMate</footer>
 
 export default App;

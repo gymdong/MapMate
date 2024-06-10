@@ -1,0 +1,11 @@
+.container {
+  background-color: #f7ff8a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.headerText {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 80px;
+  text-align: center;
+}

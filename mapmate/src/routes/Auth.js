@@ -48,35 +48,62 @@ const Auth = () => {
   };
   return (
     <div>
-      <form onSubmit={onSubmit}>
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={onChange}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={onChange}
-        />
-        <input type="submit" value={newAccount ? "Create Account" : "Log In"} />
+      <form
+        onSubmit={onSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            required
+            value={email}
+            onChange={onChange}
+          />
+
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            required
+            value={password}
+            onChange={onChange}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <input
+            type="submit"
+            value={newAccount ? "Create Account" : "Log In"}
+          />
+          <button onClick={toggleAccount}>
+            {newAccount ? "Sign in" : "Creat Account"}
+          </button>
+        </div>
         {error}
       </form>
-      <span onClick={toggleAccount}>
-        {newAccount ? "Sign in" : "Creat Account"}
-      </span>
-      <div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+        }}
+      >
         <button onClick={onSocialClick} name="google">
           Google Log In
         </button>
-      </div>
-      <div>
+
         <button onClick={onSocialClick} name="Kakao">
           Kakao Log In
         </button>

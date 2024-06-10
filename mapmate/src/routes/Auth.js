@@ -44,11 +44,6 @@ const Auth = () => {
       provider = new firebaseInstance.auth.GoogleAuthProvider();
     }
     const data = await authService.signInWithPopup(provider);
-    await dbService.collection("user_info").add({
-      user_email: data.user.email,
-      user_id: data.user.uid,
-      user_name: data.user.displayName,
-    });
     console.log(data);
   };
   return (

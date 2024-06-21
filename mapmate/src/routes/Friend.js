@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { dbService } from "fbase";
+import style from './friend.module.css';
 
 const Friend = () => {
     const [findUser, setFindUser] = useState("");
@@ -30,44 +31,43 @@ const Friend = () => {
 
     return (
         <>
-            <div>
-                <form onSubmit={FindUser}>
-                    <div className="FindUserInputBox">
-                        <input
-                            className="FindUserInput"
-                            name="FriendID"
-                            type="text"
-                            value={findUser}
-                            required
-                            placeholder="이메일을 입력해주세요."
-                            onChange={FindUserInput}
-                        />
-                        <button type="submit"></button>
-                    </div>
-                </form>
-            </div>
-            <div>
-                {userData.length || !isFindUserFinished
-                    ? userData.map((data, index) => (
-                        <UserList key={index} data={data} />
-                    ))
-                    : '해당 유저정보를 찾을수없습니다.'}
-            </div>
+          <div className={style.findUserContainer}>
+            <form className={style.findUserForm} onSubmit={FindUser}>
+              <div className={style.findUserInputBox}>
+                <input
+                  className={style.findUserInput}
+                  name="FriendID"
+                  type="text"
+                  value={findUser}
+                  required
+                  placeholder="이메일을 입력해주세요."
+                  onChange={FindUserInput}
+                />
+                <button className={style.findUserButton} type="submit">찾기</button>
+              </div>
+            </form>
+          </div>
+          <div className={style.userListContainer}>
+            {userData.length || !isFindUserFinished
+              ? userData.map((data, index) => (
+                  <UserList key={index} data={data} />
+                ))
+              : '해당 유저 정보를 찾을 수 없습니다.'}
+          </div>
         </>
-    );
+      );
+      
 };
 
-const UserList = ({ data }) => {
-    const handleFollow = () => {
-        console.log("팔로우하기 버튼.", data.user_id);
-    };
-
-    return (
-        <div>
-            <p>{data.user_name}</p>
-            <button onClick={handleFollow}>팔로우하기</button>
-        </div>
-    );
-};
+const UserList = ({ data }) => (
+    <div className={style.userItem}>
+      {data.user_name}
+      <button className={style.followButton} onClick={handleFollow}>팔로우하기</button>
+    </div>
+  );
+  
+  const handleFollow = (userName) => {
+    console.log(`팔로우: ${userName}`);
+  };
 
 export default Friend;

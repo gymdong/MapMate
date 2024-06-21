@@ -10,6 +10,7 @@ import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Friend from "routes/Friend";
 import Alert from "routes/Alert";
+import CalendarView from "routes/Calendar";
 import { dbService } from "fbase";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 
@@ -45,11 +46,16 @@ function App() {
   const sendMeetInfo = async (event) => {
     event.preventDefault();
     var textareaContent = document.getElementById("subText").value;
+    var meetData = document.getElementById("meet_start").value;
+    var meetTime = document.getElementById("meet_time").value;
+
     await dbService.collection("meet_info").add({
       sendMessage: textareaContent,
       sendUser: authService.currentUser.displayName,
       lat: selectLat,
       lng: selectLng,
+      date: meetData,
+      time: meetTime,
     });
     handleCloseOverlay();
   };
@@ -80,7 +86,7 @@ function App() {
               &times;
             </button>
             <div className={style.modal_content}>
-              <p>만날 장소를 지도에서 선택하세요!</p>
+              <p>약속 장소와 날짜를 선택하세요!</p>
               <Map
                 center={{ lat: 33.5563, lng: 126.79581 }}
                 style={{ width: "400px", height: "300px" }}
@@ -92,11 +98,16 @@ function App() {
               >
                 <MapMarker position={{ lat: selectLat, lng: selectLng }} />
               </Map>
+              <div>
+                <input type="date" id="meet_start" />
+                <input id="meet_time" type="time" />
+              </div>
               <textarea
                 placeholder="약속 내용이 무엇인가요?"
                 rows="4"
                 id="subText"
               ></textarea>
+
               <button className={style.submit_btn} onClick={sendMeetInfo}>
                 전송
               </button>
@@ -117,6 +128,11 @@ function App() {
                   exact
                   path="/profile"
                   element={<Profile userData={userData} />}
+                ></Route>
+                <Route
+                  exact
+                  path="/calendar"
+                  element={<CalendarView />}
                 ></Route>
               </>
             ) : (

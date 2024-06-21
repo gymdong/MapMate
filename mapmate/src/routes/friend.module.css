@@ -1,0 +1,112 @@
+.findUserContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 80px;
+}
+
+.findUserForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.findUserInputBox {
+    display: flex;
+    gap: 10px;
+}
+
+.findUserInput {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 250px;
+}
+
+.findUserButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.userListContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.userItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.followButton {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.followingButton {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #353a36;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 탭 */
+.tabContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 16px;
+    text-align: center;
+    color: white;
+    background-color: #353a36;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab:hover {
+    background-color: #555;
+}
+
+.activeTab {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 16px;
+    text-align: center;
+    color: white;
+    background-color: #1da1f2;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}

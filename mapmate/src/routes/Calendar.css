@@ -1,0 +1,95 @@
+/* CalendarView.module.css */
+
+/* 캘린더 컨테이너 스타일 */
+.calendar-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f7ff8a;
+}
+
+/* 캘린더 기본 스타일 오버라이드 */
+.react-calendar {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f7ff8a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #ffd700;
+  color: #fff;
+}
+
+.react-calendar__navigation button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.react-calendar__month-view__days {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.react-calendar__month-view__days__day,
+.react-calendar__tile {
+  flex: 1 0 14.28%; /* 7일이 들어가도록 비율 조정 */
+  max-width: 14.28%;
+  height: calc((100vh - 120px) / 6); /* 상단 네비게이션을 고려한 높이 계산 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.7); /* 반투명 배경 */
+  border: 1px solid #ddd !important; /* 날짜 뷰 테두리 추가 및 우선 순위 높임 */
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  box-sizing: border-box;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #fffacd;
+  transform: scale(1.05);
+}
+
+.react-calendar__tile--now {
+  background: #fffacd;
+  border-radius: 10px;
+}
+
+.react-calendar__tile--active {
+  background: #ffd700;
+  color: white;
+  border-radius: 10px;
+}
+
+/* 약속 표시 스타일 */
+.appointment {
+  background-color: #ffdfba;
+  color: #333;
+  border-radius: 5px;
+  padding: 2px 4px;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

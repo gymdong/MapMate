@@ -1,3 +1,4 @@
+import { dbService } from "fbase";
 import { useEffect } from "react";
 import { useState, useRef } from "react";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
@@ -5,6 +6,18 @@ import { Link } from "react-router-dom";
 
 const { kakao } = window;
 const Home = () => {
+  const [meets, setMeets] = useState([]);
+
+  useEffect(() => {
+    dbService.collection("meet_info").onSnapshot((snapshot) => {
+      const newArray = snapshot.docs.map((document) => ({
+        mid: document.id,
+        ...document.data(),
+      }));
+      setMeets(newArray);
+    });
+    console.log(meets);
+  }, []);
   {
     /*useEffect(() => {
     const container = document.getElementById("map");
@@ -23,31 +36,25 @@ const Home = () => {
         center={{ lat: 33.5563, lng: 126.79581 }}
         style={{ width: "1200px", height: "600px" }}
       >
-        <MapMarker
-          position={{
-            // 인포윈도우가 표시될 위치입니다
-            lat: 33.450701,
-            lng: 126.570667,
-          }}
-        >
-          <div
-            style={{
-              padding: "5px",
-              color: "#000",
-            }}
-          >
-            I'm here! <br />
-            <a
-              href="https://map.kakao.com/link/map/Hello World!,33.450701,126.570667"
-              style={{ color: "blue" }}
-              target="_blank"
-              rel="noreferrer"
+        {meets.length > 1 &&
+          meets.map((item, idx) => (
+            <MapMarker
+              position={{
+                // 인포윈도우가 표시될 위치입니다
+                lat: item.lat,
+                lng: item.lng,
+              }}
             >
-              Profile
-            </a>{" "}
-            <Link to="/friend">Message</Link>
-          </div>
-        </MapMarker>
+              <div
+                style={{
+                  padding: "5px",
+                  color: "#000",
+                }}
+              >
+                {item.sendMessage}
+              </div>
+            </MapMarker>
+          ))}
       </Map>
     </div>
   );

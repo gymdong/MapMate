@@ -1,7 +1,7 @@
 import { authService, dbService, firebaseInstance } from "fbase";
 import { useState } from "react";
 
-const Auth = () => {
+const Auth = ({ onDataChange }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newAccount, setNewAccount] = useState(true);
@@ -49,6 +49,7 @@ const Auth = () => {
       user_id: data.user.uid,
       user_name: data.user.displayName,
     });
+    onDataChange(data.user.uid);
     console.log(data);
   };
   return (

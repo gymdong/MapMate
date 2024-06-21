@@ -10,11 +10,27 @@ import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Friend from "routes/Friend";
 import Alert from "routes/Alert";
+import { dbService } from "fbase";
+import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
+
 const { kakao } = window;
 function App() {
   console.log(authService.currentUser);
   const [init, setInit] = useState(false);
   const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const [userData, setUserData] = useState("");
+  const [selectLat, setSelectLat] = useState(0);
+  const [selectLng, setSelectLng] = useState(0);
+  const handleOpenOverlay = () => {
+    setIsOverlayOpen(true);
+  };
+  const handleUserData = (newData) => {
+    setUserData(newData);
+  };
+  const handleCloseOverlay = () => {
+    setIsOverlayOpen(false);
+  };
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       console.log(user);
@@ -26,7 +42,17 @@ function App() {
       setInit(true);
     });
   }, []);
-
+  const sendMeetInfo = async (event) => {
+    event.preventDefault();
+    var textareaContent = document.getElementById("subText").value;
+    await dbService.collection("meet_info").add({
+      sendMessage: textareaContent,
+      sendUser: userData,
+      lat: selectLat,
+      lng: selectLng,
+    });
+    handleCloseOverlay();
+  };
   /*useEffect(() => {
     const container = document.getElementById("map");
     const options = {
@@ -44,6 +70,40 @@ function App() {
       style={{ width: "100%", minHeight: "100vh" }}
       className={style.container}
     >
+      {isOverlayOpen && (
+        <div className={style.modal_overlay}>
+          <div className={style.modal}>
+            <button
+              className={style.close_modal_btn}
+              onClick={handleCloseOverlay}
+            >
+              &times;
+            </button>
+            <div className={style.modal_content}>
+              <p>만날 장소를 지도에서 선택하세요!</p>
+              <Map
+                center={{ lat: 33.5563, lng: 126.79581 }}
+                style={{ width: "400px", height: "300px" }}
+                onClick={(_, mouseEvent) => {
+                  const latlng = mouseEvent.latLng;
+                  setSelectLat(latlng.getLat());
+                  setSelectLng(latlng.getLng());
+                }}
+              >
+                <MapMarker position={{ lat: selectLat, lng: selectLng }} />
+              </Map>
+              <textarea
+                placeholder="약속 내용이 무엇인가요?"
+                rows="4"
+                id="subText"
+              ></textarea>
+              <button className={style.submit_btn} onClick={sendMeetInfo}>
+                전송
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <BrowserRouter>
         <div id="container">
           {!isLoggedIn ? <p className={style.headerText}>MapMate</p> : <></>}
@@ -59,11 +119,12 @@ function App() {
               <Route exact path="/" element={<></>}></Route>
             )}
           </Routes>
-          {isLoggedIn ? <></> : <Auth />}
+          {isLoggedIn ? <></> : <Auth onDataChange={handleUserData} />}
         </div>
         <Sidebar width={320}>
           <span>여기에 메뉴 구성하기</span>
           {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
+          <button onClick={handleOpenOverlay}>새 약속 만들기</button>
         </Sidebar>
       </BrowserRouter>
     </div>

@@ -49,8 +49,8 @@ const Auth = ({ onDataChange }) => {
       user_id: data.user.uid,
       user_name: data.user.displayName,
     });
-    onDataChange(data.user.uid);
-    console.log(data);
+    onDataChange(data.user);
+    console.log(data.user);
   };
   return (
     <div>

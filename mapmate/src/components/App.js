@@ -19,7 +19,7 @@ function App() {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState({});
   const [selectLat, setSelectLat] = useState(0);
   const [selectLng, setSelectLng] = useState(0);
   const handleOpenOverlay = () => {
@@ -47,7 +47,7 @@ function App() {
     var textareaContent = document.getElementById("subText").value;
     await dbService.collection("meet_info").add({
       sendMessage: textareaContent,
-      sendUser: userData,
+      sendUser: authService.currentUser.displayName,
       lat: selectLat,
       lng: selectLng,
     });
@@ -113,7 +113,11 @@ function App() {
                 <Route exact path="/" element={<Home />}></Route>
                 <Route exact path="/friend" element={<Friend />}></Route>
                 <Route exact path="/alert" element={<Alert />}></Route>
-                <Route exact path="/profile" element={<Profile />}></Route>
+                <Route
+                  exact
+                  path="/profile"
+                  element={<Profile userData={userData} />}
+                ></Route>
               </>
             ) : (
               <Route exact path="/" element={<></>}></Route>

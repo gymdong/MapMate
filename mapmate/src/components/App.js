@@ -56,7 +56,7 @@ function App() {
       lng: selectLng,
       date: meetData,
       time: meetTime,
-      member: [],
+      member: [authService.currentUser.displayName],
     });
     handleCloseOverlay();
   };

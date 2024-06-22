@@ -190,6 +190,7 @@ const UserList = ({ data }) => {
       await dbService.collection("follow_info").add({
         receiver: data.user_email,
         sender: currentUser.email,
+        isChecked: false, // 알림 확인 여부
       });
       setIsFollowing(true);
     } else if (currentUser && isFollowing) {
@@ -198,7 +199,7 @@ const UserList = ({ data }) => {
         .where("sender", "==", currentUser.email)
         .where("receiver", "==", data.user_email)
         .get();
-
+  
       followQuery.forEach(async (doc) => {
         await dbService.collection("follow_info").doc(doc.id).delete();
       });

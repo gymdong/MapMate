@@ -3,11 +3,18 @@ import { useEffect } from "react";
 import { useState, useRef } from "react";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 import { Link } from "react-router-dom";
-
+import HomeModal from "./HomeModal";
 const { kakao } = window;
 const Home = () => {
   const [meets, setMeets] = useState([]);
+  const [isHomeModalOpen, setIsHomeModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState();
 
+  const clickMarker = (item) => {
+    setSelectedItem(item);
+    console.log(selectedItem);
+    setIsHomeModalOpen(true);
+  };
   useEffect(() => {
     dbService.collection("meet_info").onSnapshot((snapshot) => {
       const newArray = snapshot.docs.map((document) => ({
@@ -18,6 +25,9 @@ const Home = () => {
     });
     console.log(meets);
   }, []);
+  const handleCloseHomeModal = () => {
+    setIsHomeModalOpen(false);
+  };
   {
     /*useEffect(() => {
     const container = document.getElementById("map");
@@ -47,6 +57,10 @@ const Home = () => {
                 lat: item.lat,
                 lng: item.lng,
               }}
+              clickable={true}
+              onClick={() => {
+                clickMarker(item);
+              }}
             >
               <div
                 style={{
@@ -59,6 +73,9 @@ const Home = () => {
             </MapMarker>
           ))}
       </Map>
+      {isHomeModalOpen && (
+        <HomeModal onClose={handleCloseHomeModal} item={selectedItem} />
+      )}
     </div>
   );
 };

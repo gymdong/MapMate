@@ -19,9 +19,16 @@ const Friend = () => {
     const querySnapshot = await q.get();
     setUserData([]);
     querySnapshot.forEach((doc) => {
-      const { profile_picture, user_bio, user_email, user_id, user_name } = doc.data();
+      const { profile_picture, user_bio, user_email, user_id, user_name } =
+        doc.data();
       if (user_email !== currentUser.email) {
-        const data = { profile_picture, user_bio, user_email, user_id, user_name };
+        const data = {
+          profile_picture,
+          user_bio,
+          user_email,
+          user_id,
+          user_name,
+        };
         setUserData((arr) => (arr ? [...arr, data] : [data]));
       }
     });
@@ -51,7 +58,7 @@ const Friend = () => {
           .where("user_email", "==", doc.data().receiver)
           .get();
 
-        return userQuery.docs.map(userDoc => userDoc.data());
+        return userQuery.docs.map((userDoc) => userDoc.data());
       });
 
       const followingList = await Promise.all(followingPromises);
@@ -73,7 +80,7 @@ const Friend = () => {
           .where("user_email", "==", doc.data().sender)
           .get();
 
-        return userQuery.docs.map(userDoc => userDoc.data());
+        return userQuery.docs.map((userDoc) => userDoc.data());
       });
 
       const followerList = await Promise.all(followerPromises);
@@ -208,7 +215,11 @@ const UserList = ({ data }) => {
 
   return (
     <div className={style.userItem}>
-      <img src={data.profile_picture} alt={data.user_name} className={style.profile_avatar} />
+      <img
+        src={data.profile_picture}
+        alt={data.user_name}
+        className={style.profile_avatar}
+      />
       <div className={style.userDetails}>
         <div className={style.userName}>{data.user_name}</div>
         <div className={style.userEmail}>@{data.user_email}</div>

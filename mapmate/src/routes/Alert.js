@@ -83,6 +83,13 @@ const Alert = ({ onNotificationChecked }) => {
     }
   };
 
+  const truncateMessage = (message, maxLength) => {
+    if (message.length > maxLength) {
+      return message.substring(0, maxLength) + "...";
+    }
+    return message;
+  };
+
   return (
     <div className={styles.alertContainer}>
       {notifications.length > 0 ? (
@@ -91,7 +98,7 @@ const Alert = ({ onNotificationChecked }) => {
             {notification.type === "follow" ? (
               <p>{`${notification.senderName}님이 팔로우했습니다.`}</p>
             ) : (
-              <p>{`${notification.newMember}님이 참여했습니다.`}</p>
+              <p>{`"${truncateMessage(notification.sendMessage, 5)}"에 ${notification.newMember}님이 참여했습니다.`}</p>
             )}
             <button
               className={styles.checkButton}

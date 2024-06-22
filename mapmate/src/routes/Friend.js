@@ -19,9 +19,9 @@ const Friend = () => {
     const querySnapshot = await q.get();
     setUserData([]);
     querySnapshot.forEach((doc) => {
-      const { user_email, user_id, user_name } = doc.data();
+      const { profile_picture, user_bio, user_email, user_id, user_name } = doc.data();
       if (user_email !== currentUser.email) {
-        const data = { user_email, user_id, user_name };
+        const data = { profile_picture, user_bio, user_email, user_id, user_name };
         setUserData((arr) => (arr ? [...arr, data] : [data]));
       }
     });
@@ -45,11 +45,17 @@ const Friend = () => {
         .where("sender", "==", currentUser.email)
         .get();
 
-      const followingList = [];
-      followQuery.forEach((doc) => {
-        followingList.push(doc.data().receiver);
+      const followingPromises = followQuery.docs.map(async (doc) => {
+        const userQuery = await dbService
+          .collection("user_info")
+          .where("user_email", "==", doc.data().receiver)
+          .get();
+
+        return userQuery.docs.map(userDoc => userDoc.data());
       });
-      setFollowingData(followingList);
+
+      const followingList = await Promise.all(followingPromises);
+      setFollowingData(followingList.flat());
     }
   };
 
@@ -61,11 +67,17 @@ const Friend = () => {
         .where("receiver", "==", currentUser.email)
         .get();
 
-      const followerList = [];
-      followQuery.forEach((doc) => {
-        followerList.push(doc.data().sender);
+      const followerPromises = followQuery.docs.map(async (doc) => {
+        const userQuery = await dbService
+          .collection("user_info")
+          .where("user_email", "==", doc.data().sender)
+          .get();
+
+        return userQuery.docs.map(userDoc => userDoc.data());
       });
-      setFollowerData(followerList);
+
+      const followerList = await Promise.all(followerPromises);
+      setFollowerData(followerList.flat());
     }
   };
 
@@ -130,10 +142,8 @@ const Friend = () => {
         {activeTab === "following" && (
           <div className={style.userListContainer}>
             {followingData.length > 0
-              ? followingData.map((email, index) => (
-                  <div key={index} className={style.userItem}>
-                    {email}
-                  </div>
+              ? followingData.map((data, index) => (
+                  <UserList key={index} data={data} />
                 ))
               : "팔로우한 사용자가 없습니다."}
           </div>
@@ -141,10 +151,8 @@ const Friend = () => {
         {activeTab === "followers" && (
           <div className={style.userListContainer}>
             {followerData.length > 0
-              ? followerData.map((email, index) => (
-                  <div key={index} className={style.userItem}>
-                    {email}
-                  </div>
+              ? followerData.map((data, index) => (
+                  <UserList key={index} data={data} />
                 ))
               : "나를 팔로우한 사용자가 없습니다."}
           </div>
@@ -184,15 +192,32 @@ const UserList = ({ data }) => {
         sender: currentUser.email,
       });
       setIsFollowing(true);
-      console.log(`${(data.user_email, data.user_id, data.user_name)}`);
+    } else if (currentUser && isFollowing) {
+      const followQuery = await dbService
+        .collection("follow_info")
+        .where("sender", "==", currentUser.email)
+        .where("receiver", "==", data.user_email)
+        .get();
+
+      followQuery.forEach(async (doc) => {
+        await dbService.collection("follow_info").doc(doc.id).delete();
+      });
+      setIsFollowing(false);
     }
   };
 
   return (
     <div className={style.userItem}>
-      {data.user_name}
+      <img src={data.profile_picture} alt={data.user_name} className={style.profile_avatar} />
+      <div className={style.userDetails}>
+        <div className={style.userName}>{data.user_name}</div>
+        <div className={style.userEmail}>@{data.user_email}</div>
+        <div className={style.userBio}>{data.user_bio}</div>
+      </div>
       {isFollowing ? (
-        <span className={style.followingButton}>팔로우 중</span>
+        <button className={style.followingButton} onClick={handleFollow}>
+          팔로우 중
+        </button>
       ) : (
         <button className={style.followButton} onClick={handleFollow}>
           팔로우하기

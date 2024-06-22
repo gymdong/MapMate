@@ -43,7 +43,7 @@ const Alert = ({ onNotificationChecked }) => {
             const data = change.doc.data();
             const newMember = data.member[data.member.length - 1]; // 배열의 마지막 항목
 
-            if (newMember && currentUser && data.sendUser === currentUser.displayName) {
+            if (newMember && currentUser && data.sendUserid === currentUser.uid) {
               setNotifications((prev) => [
                 ...prev,
                 {

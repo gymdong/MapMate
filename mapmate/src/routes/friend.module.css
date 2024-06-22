@@ -99,11 +99,14 @@
 
 /* 탭 */
 .tabContainer {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    width: 100%;
-    max-width: 600px;
+    width: 100vw;
+    max-width: 500px;
 }
 
 .tab {

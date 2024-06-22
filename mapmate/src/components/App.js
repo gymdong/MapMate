@@ -118,7 +118,6 @@ function App() {
       )}
       <BrowserRouter>
         <div id="container">
-          {!isLoggedIn ? <p className={style.headerText}>MapMate</p> : <></>}
           <Routes>
             {isLoggedIn ? (
               <>

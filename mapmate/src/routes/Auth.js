@@ -1,5 +1,7 @@
 import { authService, dbService, firebaseInstance } from "fbase";
 import { useState } from "react";
+import bannerImage from "./banner.png";
+import "./Auth.css"; // CSS 파일 임포트
 
 const Auth = ({ onDataChange }) => {
   const [email, setEmail] = useState("");
@@ -44,17 +46,60 @@ const Auth = ({ onDataChange }) => {
       provider = new firebaseInstance.auth.GoogleAuthProvider();
     }
     const data = await authService.signInWithPopup(provider);
-    await dbService.collection("user_info").add({
-      user_email: data.user.email,
-      user_id: data.user.uid,
-      user_name: data.user.displayName,
-    });
+    const { user } = data;
+
+    const userRef = dbService
+      .collection("user_info")
+      .where("user_email", "==", user.email);
+    const snapshot = await userRef.get();
+    if (snapshot.empty) {
+      // 해당 이메일이 데이터베이스에 없을 경우에만 추가
+      await dbService.collection("user_info").add({
+        user_email: user.email,
+        user_id: user.uid,
+        user_name: user.displayName,
+      });
+      console.log("사용자 정보 추가 완료");
+    } else {
+      console.log("이미 존재하는 이메일입니다.");
+    }
+    // await dbService.collection("user_info").add({
+    //   user_email: data.user.email,
+    //   user_id: data.user.uid,
+    //   user_name: data.user.displayName,
+    // });
     onDataChange(data.user);
     console.log(data.user);
   };
   return (
     <div>
-      <form
+      <div className="image-container">
+        <img
+          src={bannerImage}
+          style={{ width: "98vw", height: "98vh" }}
+          alt="배너"
+          className="banner"
+        ></img>
+        <div className="box">
+          {/* 여기에 박스 내용 추가 */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around",
+            }}
+          >
+            <button onClick={onSocialClick} name="google">
+              구글로 시작하기!
+            </button>
+
+            <button onClick={onSocialClick} name="Kakao">
+              카카오로 시작하기!
+            </button>
+          </div>
+        </div>
+      </div>
+      {/*<form 여기는 일반 로그인인데 일단 주석처리하고 구글로만 로그인하게
         onSubmit={onSubmit}
         style={{
           display: "flex",
@@ -97,23 +142,7 @@ const Auth = ({ onDataChange }) => {
           </button>
         </div>
         {error}
-      </form>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-        }}
-      >
-        <button onClick={onSocialClick} name="google">
-          Google Log In
-        </button>
-
-        <button onClick={onSocialClick} name="Kakao">
-          Kakao Log In
-        </button>
-      </div>
+      </form>*/}
     </div>
   );
 };

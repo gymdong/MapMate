@@ -5,7 +5,7 @@ import { storageService } from "fbase";
 import { authService } from "fbase";
 import { dbService } from "fbase";
 
-function EditProfile({ onClose }, { changedUser }) {
+function EditProfile({ onClose, changedUser }) {
   const [bio, setBio] = useState("This is a short bio.");
   const [avatar, setAvatar] = useState("");
 

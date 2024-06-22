@@ -72,7 +72,7 @@
   padding: 10px 20px;
   font-size: 16px;
   color: white;
-  background-color: #1da1f2; /* Twitter-like blue */
+  background-color: #cccccc; /* Twitter-like blue */
   border: none;
   border-radius: 25px;
   cursor: pointer;
@@ -81,11 +81,11 @@
 }
 
 .edit_profile_button:hover {
-  background-color: #0d8bf2; /* Slightly darker blue on hover */
+  background-color: #cccccce0(207 45% 9%); /* Slightly darker blue on hover */
   transform: scale(1.05);
 }
 
 .edit_profile_button:active {
-  background-color: #0078d4; /* Even darker blue on click */
+  background-color: #cccccce0(207 45% 9%); /* Even darker blue on click */
   transform: scale(0.95);
 }

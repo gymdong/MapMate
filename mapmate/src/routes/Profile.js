@@ -7,6 +7,24 @@ const Profile = ({ userData }) => {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [userProfile, setUserProfile] = useState("");
   const [userBio, setUserBio] = useState("");
+  const [isChangedUser, setIsChangedUser] = useState("");
+  const [meetList, setMeetList] = useState([]);
+  const getMeetInfo = async () => {
+    const data = dbService
+      .collection("meet_info")
+      .where("sendUser", "==", authService.currentUser.displayName);
+    const querySnapshot = await data.get();
+    setMeetList([]);
+    querySnapshot.forEach((doc) => {
+      console.log(doc);
+      const { lat, lng, sendMessage, sendUser, date, time } = doc.data();
+      if (sendUser === authService.currentUser.displayName) {
+        const data = { lat, lng, sendMessage, sendUser, date, time };
+        setMeetList((arr) => (arr ? [...arr, data] : [data]));
+      }
+    });
+    console.log(meetList);
+  };
   useEffect(() => {
     dbService
       .collection("user_info")
@@ -23,7 +41,8 @@ const Profile = ({ userData }) => {
       .catch((error) => {
         console.error("Error getting documents: ", error);
       });
-  }, [userData]); //이거 수정될때마다 리렌더링하도록하자
+  }, [isChangedUser]); //이거 수정될때마다 리렌더링하도록하자
+  useEffect(() => getMeetInfo, []);
   const handleOpenEditProfile = () => {
     setIsEditProfileOpen(true);
   };
@@ -64,16 +83,24 @@ const Profile = ({ userData }) => {
         </div>
       </div>
       <div className={style.profile_tweets}>
-        <h2>Tweets</h2>
+        <h2>내가 만든 약속들</h2>
         {/* 트윗 목록 */}
-        <div className={style.tweet}>
-          <p>This is a tweet.</p>
-        </div>
-        <div className={style.tweet}>
-          <p>This is another tweet.</p>
-        </div>
+        {meetList.map((val, idx) => (
+          <div className={style.tweet}>
+            <p>
+              날짜 : {val.date + " "}
+              시간 : {val.time}
+            </p>
+            <p>{val.sendMessage}</p>
+          </div>
+        ))}
       </div>
-      {isEditProfileOpen && <EditProfile onClose={handleCloseEditProfile} />}
+      {isEditProfileOpen && (
+        <EditProfile
+          onClose={handleCloseEditProfile}
+          changedUser={setIsChangedUser}
+        />
+      )}
       <button onClick={onLogOutClick}>Log Out</button>
     </div>
   );

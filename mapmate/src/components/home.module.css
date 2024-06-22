@@ -65,9 +65,9 @@ textarea {
 .submit_btn {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #1da1f2;
-  color: white;
+  background-color: #e3f352;
+  color: black;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
 }

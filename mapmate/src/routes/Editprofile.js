@@ -5,7 +5,7 @@ import { storageService } from "fbase";
 import { authService } from "fbase";
 import { dbService } from "fbase";
 
-function EditProfile({ onClose }) {
+function EditProfile({ onClose }, { changedUser }) {
   const [bio, setBio] = useState("This is a short bio.");
   const [avatar, setAvatar] = useState("");
 
@@ -46,6 +46,7 @@ function EditProfile({ onClose }) {
         console.error("Error getting documents: ", error);
       });
     console.log(response);
+    changedUser(bio);
     onClose();
   };
   const handleAvatarChange = async (event) => {

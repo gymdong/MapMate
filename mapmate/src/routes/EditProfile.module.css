@@ -57,7 +57,7 @@
 }
 
 .bio_input {
-  width: 100%;
+  width: 95.5%;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -68,8 +68,8 @@
 .save_button {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #1da1f2;
-  color: white;
+  background-color: #fcff31;
+  color: black;
   border: none;
   border-radius: 4px;
   cursor: pointer;

@@ -30,11 +30,14 @@ const Home = () => {
   <div id="map" style={{ width: 300, height: 200 }}></div>*/
   }
   return (
-    <div>
-      <p>홈 화면입니다!</p>
+    <div style={{ width: "95vw", height: "95vh" }}>
+      <div>
+        <p>홈 화면입니다!</p>
+      </div>
+
       <Map
         center={{ lat: 33.5563, lng: 126.79581 }}
-        style={{ width: "1200px", height: "600px" }}
+        style={{ width: "100%", height: "100%" }}
       >
         {meets.length > 1 &&
           meets.map((item, idx) => (

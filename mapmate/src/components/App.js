@@ -52,12 +52,14 @@ function App() {
     await dbService.collection("meet_info").add({
       sendMessage: textareaContent,
       sendUser: authService.currentUser.displayName,
+      sendUserid: authService.currentUser.uid,
       lat: selectLat,
       lng: selectLng,
       date: meetData,
       time: meetTime,
       member: [authService.currentUser.displayName],
     });
+    console.log(authService.currentUser);
     handleCloseOverlay();
   };
   /*useEffect(() => {

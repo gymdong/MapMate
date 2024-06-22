@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./sidebar.module.css";
 import { authService } from "fbase";
 import { useNavigate } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
 const Sidebar = ({ width = 280, children }) => {
   const [isOpen, setOpen] = useState(false);
   const [xPosition, setX] = useState(width);
@@ -54,9 +55,12 @@ const Sidebar = ({ width = 280, children }) => {
         <button onClick={() => toggleMenu()} className={styles.button}>
           {isOpen ? <span>X</span> : <span>O</span>}
         </button>
-
-        <div className={styles.content}>{children}</div>
-        <button onClick={onLogOutClick}>Log Out</button>
+        <FaBars style={{ fontSize: "2em", marginRight: "10px" }} />
+        <div className={styles.content}></div>
+        {children}
+        <button onClick={onLogOutClick} className={styles.log_out_button}>
+          Log Out
+        </button>
       </div>
     </div>
   );

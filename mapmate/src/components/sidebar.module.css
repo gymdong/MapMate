@@ -33,8 +33,30 @@
   padding: 40px 40px 0 20px;
   position: relative;
   width: 100%;
+  border: 1px solid rgb(236, 0, 0);
 }
 .icon {
   margin: 0;
   color: #202020;
+}
+.log_out_button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #cccccc; /* Twitter-like blue */
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  outline: none;
+}
+
+.log_out_button:hover {
+  background-color: #cccccce0(207 45% 9%); /* Slightly darker blue on hover */
+  transform: scale(1.05);
+}
+
+.log_out_button:active {
+  background-color: #cccccce0(207 45% 9%); /* Even darker blue on click */
+  transform: scale(0.95);
 }

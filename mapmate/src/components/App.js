@@ -142,7 +142,6 @@ function App() {
           {isLoggedIn ? <></> : <Auth onDataChange={handleUserData} />}
         </div>
         <Sidebar width={320}>
-          <span>여기에 메뉴 구성하기</span>
           {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
           <button onClick={handleOpenOverlay} className={style.submit_btn}>
             새 약속 만들기

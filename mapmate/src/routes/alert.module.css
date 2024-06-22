@@ -12,14 +12,15 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #fff;
+    gap: 20px;
   }
   
   .checkButton {
-    padding: 5px 10px;
+    padding: 5px 10px;  
     border: none;
     border-radius: 5px;
     background-color: #007bff;

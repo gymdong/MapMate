@@ -6,17 +6,16 @@ const Alert = ({ onNotificationChecked }) => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      const currentUser = authService.currentUser;
-      if (currentUser) {
-        const alertQuery = await dbService
-          .collection("follow_info")
-          .where("receiver", "==", currentUser.email)
-          .where("isChecked", "==", false)
-          .get();
+    const currentUser = authService.currentUser;
 
-        const notificationsData = await Promise.all(
-          alertQuery.docs.map(async (doc) => {
+    if (currentUser) {
+      // follow_info 알림 리스너
+      const unsubscribeFollow = dbService
+        .collection("follow_info")
+        .where("receiver", "==", currentUser.email)
+        .where("isChecked", "==", false)
+        .onSnapshot((snapshot) => {
+          const followNotifications = snapshot.docs.map(async (doc) => {
             const data = doc.data();
             const senderQuery = await dbService
               .collection("user_info")
@@ -27,26 +26,57 @@ const Alert = ({ onNotificationChecked }) => {
             return {
               id: doc.id,
               senderName: senderData?.user_name,
+              type: "follow",
               ...data,
             };
-          })
-        );
+          });
 
-        setNotifications(notificationsData);
-      }
-    };
+          Promise.all(followNotifications).then((resolvedFollowNotifications) => {
+            setNotifications((prev) => [...prev, ...resolvedFollowNotifications]);
+          });
+        });
 
-    fetchNotifications();
+      // meet_info 리스너
+      const unsubscribeMeetInfo = dbService.collection("meet_info").onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "modified") {
+            const data = change.doc.data();
+            const newMember = data.member[data.member.length - 1]; // 배열의 마지막 항목
+
+            if (newMember && currentUser && data.sendUser === currentUser.displayName) {
+              setNotifications((prev) => [
+                ...prev,
+                {
+                  id: change.doc.id,
+                  newMember,
+                  sendMessage: data.sendMessage,
+                  type: "meet_info",
+                  ...data,
+                },
+              ]);
+            }
+          }
+        });
+      });
+
+      // 컴포넌트 언마운트 시 리스너 해제
+      return () => {
+        unsubscribeFollow();
+        unsubscribeMeetInfo();
+      };
+    }
   }, []);
 
-  const handleCheckNotification = async (id) => {
-    await dbService.collection("follow_info").doc(id).update({
-      isChecked: true,
-    });
+  const handleCheckNotification = async (id, type) => {
+    if (type === "follow") {
+      await dbService.collection("follow_info").doc(id).update({
+        isChecked: true,
+      });
+    } else if (type === "meet_info") {
+      // meet_info 컬렉션 업데이트 로직용 빈자리
+    }
 
-    setNotifications((prev) =>
-      prev.filter((notification) => notification.id !== id)
-    );
+    setNotifications((prev) => prev.filter((notification) => notification.id !== id));
 
     if (onNotificationChecked) {
       onNotificationChecked(); // 알림 확인 시 콜백 호출
@@ -58,10 +88,14 @@ const Alert = ({ onNotificationChecked }) => {
       {notifications.length > 0 ? (
         notifications.map((notification) => (
           <div key={notification.id} className={styles.notificationItem}>
-            <p>{`${notification.senderName}님이 팔로우했습니다.`}</p>
+            {notification.type === "follow" ? (
+              <p>{`${notification.senderName}님이 팔로우했습니다.`}</p>
+            ) : (
+              <p>{`${notification.newMember}님이 참여했습니다.`}</p>
+            )}
             <button
               className={styles.checkButton}
-              onClick={() => handleCheckNotification(notification.id)}
+              onClick={() => handleCheckNotification(notification.id, notification.type)}
             >
               확인
             </button>

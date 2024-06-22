@@ -9,16 +9,18 @@ const Profile = ({ userData }) => {
   const [userBio, setUserBio] = useState("");
   const [isChangedUser, setIsChangedUser] = useState("");
   const [meetList, setMeetList] = useState([]);
+  const [userName, setUserName] = useState("");
   const getMeetInfo = async () => {
+    setUserName(authService.currentUser.displayName);
     const data = dbService
       .collection("meet_info")
-      .where("sendUser", "==", authService.currentUser.displayName);
+      .where("sendUser", "==", userName);
     const querySnapshot = await data.get();
     setMeetList([]);
     querySnapshot.forEach((doc) => {
       console.log(doc);
       const { lat, lng, sendMessage, sendUser, date, time } = doc.data();
-      if (sendUser === authService.currentUser.displayName) {
+      if (sendUser === userName) {
         const data = { lat, lng, sendMessage, sendUser, date, time };
         setMeetList((arr) => (arr ? [...arr, data] : [data]));
       }
@@ -66,9 +68,7 @@ const Profile = ({ userData }) => {
             alt="Avatar"
           />
           <div className={style.profile_details}>
-            <h1 className={style.profile_name}>
-              {authService.currentUser.displayName}
-            </h1>
+            <h1 className={style.profile_name}>{userName}</h1>
             <p className={style.profile_username}>
               @{authService.currentUser.email}
             </p>

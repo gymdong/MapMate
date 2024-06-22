@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./sidebar.module.css";
-
+import { authService } from "fbase";
+import { useNavigate } from "react-router-dom";
 const Sidebar = ({ width = 280, children }) => {
   const [isOpen, setOpen] = useState(false);
   const [xPosition, setX] = useState(width);
@@ -26,7 +27,12 @@ const Sidebar = ({ width = 280, children }) => {
       await setOpen(false);
     }
   };
+  const navigate = useNavigate();
 
+  const onLogOutClick = () => {
+    authService.signOut();
+    navigate("/");
+  };
   useEffect(() => {
     window.addEventListener("click", handleClose);
     return () => {
@@ -50,6 +56,7 @@ const Sidebar = ({ width = 280, children }) => {
         </button>
 
         <div className={styles.content}>{children}</div>
+        <button onClick={onLogOutClick}>Log Out</button>
       </div>
     </div>
   );

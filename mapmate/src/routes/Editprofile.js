@@ -17,6 +17,12 @@ function EditProfile({ onClose, changedUser }) {
       .ref()
       .child(`${authService.currentUser.uid}/${uuidv4()}`);
     console.log(avatar);
+    if (avatar == "") {
+      console.log("not changed");
+      onClose();
+      return;
+    }
+
     const response = await attachmentRef.putString(avatar, "data_url");
     const attachmentUrl = await response.ref.getDownloadURL();
 
@@ -82,7 +88,12 @@ function EditProfile({ onClose, changedUser }) {
             ) : (
               <p>사진을 선택해주세요.</p>
             )}
-            <input type="file" onChange={handleAvatarChange} accept="image/*" />
+            <input
+              type="file"
+              onChange={handleAvatarChange}
+              accept="image/*"
+              required
+            />
           </div>
           <div className={style.bio_section}>
             <textarea

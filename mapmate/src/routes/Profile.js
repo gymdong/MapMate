@@ -63,10 +63,7 @@ const Profile = ({ userData }) => {
     setIsEditProfileOpen(false);
   };
   const navigate = useNavigate();
-  const onLogOutClick = () => {
-    authService.signOut();
-    navigate("/");
-  };
+
   const truncateMessage = (message, maxLength) => {
     if (message.length > maxLength) {
       return message.substring(0, maxLength) + "...";

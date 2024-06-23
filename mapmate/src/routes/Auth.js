@@ -3,6 +3,7 @@ import { useState } from "react";
 import bannerImage from "./banner.png";
 import kakaoImage from "./kakaomap.png";
 import "./Auth.css"; // CSS 파일 임포트
+import { storageService } from "fbase";
 
 const Auth = ({ onDataChange }) => {
   const [email, setEmail] = useState("");
@@ -19,6 +20,7 @@ const Auth = ({ onDataChange }) => {
       setPassword(value);
     }
   };
+
   const onSubmit = async (event) => {
     try {
       let data;
@@ -59,6 +61,9 @@ const Auth = ({ onDataChange }) => {
         user_email: user.email,
         user_id: user.uid,
         user_name: user.displayName,
+        profile_picture:
+          "https://firebasestorage.googleapis.com/v0/b/mapmate-1026e.appspot.com/o/E8fRTFXVEAAjQro.jpg?alt=media&token=c19d423b-0f34-462d-b916-ea2598c015f9",
+        user_bio: "짧은 소개를 작성하세요!",
       });
       console.log("사용자 정보 추가 완료");
     } else {

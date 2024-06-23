@@ -4,13 +4,14 @@ import { useState, useRef } from "react";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 import { Link } from "react-router-dom";
 import HomeModal from "./HomeModal";
+import { authService } from "fbase";
 const { kakao } = window;
-
 const Home = () => {
   const [meets, setMeets] = useState([]);
   const [isHomeModalOpen, setIsHomeModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
   const [isMountFinished, setIsMountFinished] = useState(false);
+  const [setRetVal, setSetRetVal] = useState(true);
   const [state, setState] = useState({
     center: {
       lat: 33.45058,
@@ -33,6 +34,38 @@ const Home = () => {
     console.log(selectedItem);
     setIsHomeModalOpen(true);
   };
+  const checkFollowingStatus = async (data) => {
+    const currentUser = authService.currentUser;
+    const querySnapshot = await dbService
+      .collection("user_info")
+      .where("user_id", "==", data.sendUserid)
+      .get();
+
+    let uEmail;
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((doc) => {
+        const userInfo = doc.data();
+        const userEmail = userInfo.user_email;
+        uEmail = userEmail;
+      });
+    }
+
+    if (currentUser) {
+      const followQuery = await dbService
+        .collection("follow_info")
+        .where("sender", "==", currentUser.email)
+        .where("receiver", "==", uEmail)
+        .get();
+      followQuery.forEach((val) => {
+        console.log(val.data());
+      });
+      if (!followQuery.empty) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
   useEffect(() => {
     dbService.collection("meet_info").onSnapshot((snapshot) => {
       const newArray = snapshot.docs.map((document) => ({
@@ -41,7 +74,7 @@ const Home = () => {
       }));
       setMeets(newArray);
     });
-    console.log(meets);
+    //console.log(meets);
     setIsMountFinished(true);
   }, []);
 
@@ -83,9 +116,7 @@ const Home = () => {
   const handleCloseHomeModal = () => {
     setIsHomeModalOpen(false);
   };
-  const changedCenter = (center) => {
-    console.log("why?", center, state);
-  };
+
   {
     /*useEffect(() => {
     const container = document.getElementById("map");
@@ -105,7 +136,6 @@ const Home = () => {
           style={{ width: "100%", height: "100%" }}
           ispanto={state.ispanto}
           level={6}
-          onCenterChanged={changedCenter}
         >
           <MapMarker
             position={state.center}
@@ -121,8 +151,13 @@ const Home = () => {
               const todayDate = getFormattedDate();
               const meetDateObj = new Date(meetDate);
               const todayDateobj = new Date(todayDate);
+              let fs;
+              checkFollowingStatus(item).then((followstatus) => {
+                fs = followstatus;
+              });
 
               if (meetDateObj.getTime() >= todayDateobj.getTime()) {
+                //여기 조건 수정
                 return (
                   <MapMarker
                     position={{

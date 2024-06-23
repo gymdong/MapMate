@@ -48,6 +48,7 @@ function EditProfile({ onClose, changedUser }) {
     console.log(response);
     changedUser(bio);
     onClose();
+    // window.location.reload("/profile");
   };
   const handleAvatarChange = async (event) => {
     const {

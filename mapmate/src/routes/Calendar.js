@@ -15,15 +15,32 @@ function CalendarView() {
   const getMeetInfo = async () => {
     const data = dbService
       .collection("meet_info")
-      .where("sendUser", "==", authService.currentUser.displayName);
+      .where("sendUserid", "==", authService.currentUser.uid);
     const querySnapshot = await data.get();
     setMeetList([]);
     querySnapshot.forEach((doc) => {
       console.log(doc);
-      const { lat, lng, sendMessage, sendUser, date, time, member } =
-        doc.data();
-      if (sendUser === authService.currentUser.displayName) {
-        const data = { lat, lng, sendMessage, sendUser, date, time, member };
+      const {
+        lat,
+        lng,
+        sendMessage,
+        sendUser,
+        date,
+        time,
+        member,
+        sendUserid,
+      } = doc.data();
+      if (sendUserid === authService.currentUser.uid) {
+        const data = {
+          lat,
+          lng,
+          sendMessage,
+          sendUser,
+          date,
+          time,
+          member,
+          sendUserid,
+        };
         setMeetList((arr) => (arr ? [...arr, data] : [data]));
       }
     });

@@ -50,28 +50,28 @@
 }
 
 .profile_bio {
-  margin-top: 10px;
+  margin: 8px 0;
   font-size: 16px;
 }
 
-.profile_tweets {
+.profile_meets {
   padding: 20px;
   border-top: 1px solid #ccc;
 }
 
-.profile_tweets h2 {
+.profile_meets h2 {
   margin: 0;
   font-size: 20px;
 }
 
-.tweet {
+.meet {
   padding: 10px 0;
   border-bottom: 1px solid #eee;
 }
 .edit_profile_button {
   padding: 10px 20px;
   font-size: 16px;
-  color: white;
+  color: black;
   background-color: #cccccc; /* Twitter-like blue */
   border: none;
   border-radius: 25px;
@@ -88,4 +88,9 @@
 .edit_profile_button:active {
   background-color: #cccccce0(207 45% 9%); /* Even darker blue on click */
   transform: scale(0.95);
+}
+.message {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 20px;
+  padding: 5px 0;
 }

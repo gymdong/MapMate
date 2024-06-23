@@ -10,10 +10,11 @@ const Home = () => {
   const [meets, setMeets] = useState([]);
   const [isHomeModalOpen, setIsHomeModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
+  const [isMountFinished, setIsMountFinished] = useState(false);
   const [state, setState] = useState({
     center: {
-      lat: 33.450701,
-      lng: 126.570667,
+      lat: 33.45058,
+      lng: 126.574942,
     },
     errMsg: null,
     isLoading: true,
@@ -41,6 +42,7 @@ const Home = () => {
       setMeets(newArray);
     });
     console.log(meets);
+    setIsMountFinished(true);
   }, []);
 
   useEffect(() => {
@@ -75,9 +77,14 @@ const Home = () => {
     }
     console.log(state);
   }, []);
-
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
   const handleCloseHomeModal = () => {
     setIsHomeModalOpen(false);
+  };
+  const changedCenter = (center) => {
+    console.log("why?", center, state);
   };
   {
     /*useEffect(() => {
@@ -92,52 +99,55 @@ const Home = () => {
   }
   return (
     <div style={{ width: "85vw", height: "85vh" }}>
-      <Map
-        center={state.center}
-        style={{ width: "100%", height: "100%" }}
-        ispanto={state.ispanto}
-        level={6}
-      >
-        <MapMarker position={state.center}>
-          <div style={{ padding: "5px", color: "#000" }}>
-            {state.errMsg ? state.errMsg : "여기에 계신가요?!"}
-          </div>
-        </MapMarker>
-        {meets.length > 1 &&
-          meets.map((item, idx) => {
-            const meetDate = item.date;
-            const todayDate = getFormattedDate();
-            const meetDateObj = new Date(meetDate);
-            const todayDateobj = new Date(todayDate);
+      {isMountFinished && (
+        <Map
+          center={{ lat: state.center.lat, lng: state.center.lng }}
+          style={{ width: "100%", height: "100%" }}
+          ispanto={state.ispanto}
+          level={6}
+          onCenterChanged={changedCenter}
+        >
+          <MapMarker position={state.center}>
+            <div style={{ padding: "5px", color: "#000" }}>
+              {state.errMsg ? state.errMsg : "여기에 계신가요?!"}
+            </div>
+          </MapMarker>
+          {meets.length > 1 &&
+            meets.map((item, idx) => {
+              const meetDate = item.date;
+              const todayDate = getFormattedDate();
+              const meetDateObj = new Date(meetDate);
+              const todayDateobj = new Date(todayDate);
 
-            if (meetDateObj.getTime() >= todayDateobj.getTime()) {
-              return (
-                <MapMarker
-                  position={{
-                    // 인포윈도우가 표시될 위치입니다
-                    lat: item.lat,
-                    lng: item.lng,
-                  }}
-                  clickable={true}
-                  onClick={() => {
-                    clickMarker(item);
-                  }}
-                >
-                  <div
-                    style={{
-                      padding: "5px",
-                      color: "#000",
+              if (meetDateObj.getTime() >= todayDateobj.getTime()) {
+                return (
+                  <MapMarker
+                    position={{
+                      // 인포윈도우가 표시될 위치입니다
+                      lat: item.lat,
+                      lng: item.lng,
+                    }}
+                    clickable={true}
+                    onClick={() => {
+                      clickMarker(item);
                     }}
                   >
-                    {item.sendMessage}
-                  </div>
-                </MapMarker>
-              );
-            } else {
-              return <></>;
-            }
-          })}
-      </Map>
+                    <div
+                      style={{
+                        padding: "5px",
+                        color: "#000",
+                      }}
+                    >
+                      {item.sendMessage}
+                    </div>
+                  </MapMarker>
+                );
+              } else {
+                return <></>;
+              }
+            })}
+        </Map>
+      )}
       {isHomeModalOpen && (
         <HomeModal onClose={handleCloseHomeModal} item={selectedItem} />
       )}

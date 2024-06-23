@@ -1,8 +1,8 @@
 .container {
-  background-color: #f7ff8a;
+  background-color: rgb(247, 255, 138, 0.8);
 }
 .sidebar {
-  background-color: #f7ff8a;
+  background-color: rgba(235, 245, 104, 1);
   border-right: 1px solid #202020;
   position: fixed;
   top: 0;

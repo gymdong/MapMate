@@ -14,14 +14,24 @@ const Profile = ({ userData }) => {
     setUserName(authService.currentUser.displayName);
     const data = dbService
       .collection("meet_info")
-      .where("sendUser", "==", userName);
+      .where("sendUserid", "==", authService.currentUser.uid);
     const querySnapshot = await data.get();
     setMeetList([]);
+    console.log(querySnapshot);
     querySnapshot.forEach((doc) => {
       console.log(doc);
-      const { lat, lng, sendMessage, sendUser, date, time } = doc.data();
-      if (sendUser === userName) {
-        const data = { lat, lng, sendMessage, sendUser, date, time };
+      const { lat, lng, sendMessage, sendUser, date, time, sendUserid } =
+        doc.data();
+      if (sendUserid === authService.currentUser.uid) {
+        const data = {
+          lat,
+          lng,
+          sendMessage,
+          sendUser,
+          date,
+          time,
+          sendUserid,
+        };
         setMeetList((arr) => (arr ? [...arr, data] : [data]));
       }
     });
@@ -43,7 +53,7 @@ const Profile = ({ userData }) => {
       .catch((error) => {
         console.error("Error getting documents: ", error);
       });
-  }, [isChangedUser]); //이거 수정될때마다 리렌더링하도록하자
+  }, [isEditProfileOpen]); //이거 수정될때마다 리렌더링하도록하자
   useEffect(() => getMeetInfo, []);
   const handleOpenEditProfile = () => {
     setIsEditProfileOpen(true);
@@ -57,7 +67,12 @@ const Profile = ({ userData }) => {
     authService.signOut();
     navigate("/");
   };
-
+  const truncateMessage = (message, maxLength) => {
+    if (message.length > maxLength) {
+      return message.substring(0, maxLength) + "...";
+    }
+    return message;
+  };
   return (
     <div className={style.profile_container}>
       <div className={style.profile_header}>
@@ -70,7 +85,7 @@ const Profile = ({ userData }) => {
           <div className={style.profile_details}>
             <h1 className={style.profile_name}>{userName}</h1>
             <p className={style.profile_username}>
-              @{authService.currentUser.email}
+              {authService.currentUser.email}
             </p>
             <p className={style.profile_bio}>{userBio}</p>
             <button
@@ -82,16 +97,18 @@ const Profile = ({ userData }) => {
           </div>
         </div>
       </div>
-      <div className={style.profile_tweets}>
+      <div className={style.profile_meets}>
         <h2>내가 만든 약속들</h2>
         {/* 트윗 목록 */}
         {meetList.map((val, idx) => (
-          <div className={style.tweet}>
-            <p>
+          <div className={style.meet}>
+            <p className={style.message}>
               날짜 : {val.date + " "}
               시간 : {val.time}
             </p>
-            <p>{val.sendMessage}</p>
+            <p className={style.message}>
+              요약 : {" " + truncateMessage(val.sendMessage, 6)}
+            </p>
           </div>
         ))}
       </div>
@@ -101,7 +118,6 @@ const Profile = ({ userData }) => {
           changedUser={setIsChangedUser}
         />
       )}
-      <button onClick={onLogOutClick}>Log Out</button>
     </div>
   );
 };

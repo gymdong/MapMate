@@ -4,7 +4,7 @@ import { authService } from "fbase";
 import { useNavigate } from "react-router-dom";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 const Sidebar = ({ width = 280, children, isLoggedIn }) => {
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(true);
   const [xPosition, setX] = useState(width);
   const side = useRef();
 

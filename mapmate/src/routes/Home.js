@@ -130,7 +130,7 @@ const Home = ({ handleCurrentLL }) => {
   <div id="map" style={{ width: 300, height: 200 }}></div>*/
   }
   return (
-    <div style={{ width: "85vw", height: "85vh" }}>
+    <div style={{ width: "100vw", height: "100vh" }}>
       {isMountFinished && (
         <Map
           center={{ lat: state.center.lat, lng: state.center.lng }}

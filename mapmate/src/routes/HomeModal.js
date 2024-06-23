@@ -18,6 +18,31 @@ function HomeModal({ onClose, item }) {
   const [members, setMembers] = useState(item.member); // 멤버 상태 추가
   const currentUser = authService.currentUser;
 
+  const truncateMessage = (message, maxLength) => {
+    if (message.length > maxLength) {
+      return message.substring(0, maxLength) + "...";
+    }
+    return message;
+  };
+
+  const notifyMembers = async (message, excludeSelf = true) => {
+    const memberNotifications = members.map(async (member) => {
+      const userQuery = await dbService.collection("user_info").where("user_name", "==", member).get();
+      const userData = userQuery.docs[0]?.data();
+
+      if (userData && (!excludeSelf || userData.user_email !== currentUser.email)) { //수정하거나 삭제한 본인의 email은 notifications에 저장안되게
+        await dbService.collection("notifications").add({
+          userId: userData.user_email,
+          message: message,
+          isChecked: false,
+          timestamp: new Date(),
+        });
+      }
+    });
+
+    await Promise.all(memberNotifications);
+  };
+
   const joinToMeet = async () => {
     const docRef = await dbService.collection("meet_info").doc(item.mid);
     docRef
@@ -42,6 +67,8 @@ function HomeModal({ onClose, item }) {
                 ]);
                 alert("참여 성공!");
                 console.log("멤버 추가 성공");
+                const truncatedMessage = truncateMessage(item.sendMessage, 5);
+                notifyMembers(`${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속에 참여했습니다.`);
               })
               .catch((error) => {
                 console.error("멤버 추가 오류:", error);
@@ -67,7 +94,9 @@ function HomeModal({ onClose, item }) {
     const docRef = dbService.collection("meet_info").doc(item.mid);
     docRef
       .delete()
-      .then(() => {
+      .then(async () => {
+        const truncatedMessage = truncateMessage(item.sendMessage, 5);
+        await notifyMembers(`${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속을 삭제했습니다.`);
         alert("약속 삭제 성공!");
         console.log("삭제 성공");
         onClose(); // 삭제 후 모달 닫기
@@ -97,7 +126,9 @@ function HomeModal({ onClose, item }) {
         time: newTime,
         lat: newLat,
         lng: newLng,
-      }).then(() => {
+      }).then(async () => {
+        const truncatedMessage = truncateMessage(item.sendMessage, 5);
+        await notifyMembers(`${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속을 수정했습니다.`);
         alert("약속 수정 성공!");
         console.log("수정 성공");
         setIsEditing(false);

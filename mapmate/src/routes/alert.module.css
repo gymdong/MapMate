@@ -1,0 +1,34 @@
+.alertContainer {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    max-width: 1000px;
+    margin: 20px auto;
+  }
+  
+  .notificationItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    gap: 20px;
+  }
+  
+  .checkButton {
+    padding: 5px 10px;  
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .checkButton:hover {
+    background-color: #0056b3;
+  }
+  

@@ -1,70 +1,25 @@
-# Getting Started with Create React App
+# MapMate
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+약속 관리 서비스, MapMate입니다.
 
-## Available Scripts
+## How to use?
 
-In the project directory, you can run:
+`cd mapmate`
 
-### `npm start`
+앱을 실행하는 경로는 Mapmate 폴더에서 mapmate 폴더로 한 번 들어가야 합니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`npm install`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+해당 저장소를 clone 받은 후에 반드시 npm install을 진행해야 합니다.
 
-### `npm test`
+`npm start`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+이후 npm start를 진행하면 localhost에서 구동됩니다.
 
-### `npm run build`
+### Main Function
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 기본적으로, 아는 사람들(특히 친구들과)끼리 사용할 수 있는 약속 플래닝 웹앱입니다.
+  - 먼저 친구를 가입한 구글 이메일을 통해 팔로우 한 뒤, 사이드 바에 있는 약속 생성을 이용해 지도에 직접 접근해 위치를 찍고, 시간과 약속 내용을 업로드합니다.
+  - 이후, 지도에서 친구가 생성한 약속 중 마음에 드는 약속이 있다면 참가합니다.
+  - 캘린더에서 본인이 포함된 약속이 있는 날짜들을 한 눈에 볼 수 있습니다.
+  - 프로필을 꾸밀 수 있고, 프로필에서 자신이 생성한 약속들을 한 눈에 볼 수 있습니다.

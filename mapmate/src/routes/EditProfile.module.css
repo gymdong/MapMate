@@ -1,0 +1,171 @@
+/* EditProfile.module.css */
+
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.close_modal_btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.edit_profile_content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.avatar_section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile_avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid white;
+  margin-bottom: 10px;
+}
+.profile_avatar_text {
+  padding-bottom: 15px;
+}
+.inputBox {
+  display: inline-block;
+  position: relative;
+}
+
+.inputBox input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+}
+
+.inputBox label {
+  display: block;
+  padding: 10px 15px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.inputBox label:hover {
+  background-color: #e0e0e0;
+}
+.bio_section {
+  display: flex;
+  flex-direction: column;
+}
+
+.bio_input {
+  width: 95.5%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+}
+
+.save_button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #fcff31;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.meetText {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 18px;
+  padding: 5px 0;
+}
+.meetContainer {
+  padding: 2px;
+}
+.meetButton {
+  margin-top: 15px;
+  padding: 10px 10px;
+  background-color: #51e0cd;
+  color: black;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 18px; /* 폰트 크기 */
+  color: #333; /* 텍스트 색상 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  transition: transform 0.3s;
+}
+.meetButton:hover {
+  transform: scale(1.05);
+}
+.meetButton:active {
+  transform: scale(0.95);
+}
+.buttonContainer {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.meetContainer_c {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.281);
+  padding: 10px 0;
+}
+.sendInput {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: "Arial", sans-serif;
+}
+.sendInput:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+.sendTextArea {
+  width: 100%;
+}
+.buttonBox {
+  display: flex;
+  justify-content: center;
+}

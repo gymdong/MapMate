@@ -3,10 +3,12 @@ import styles from "./sidebar.module.css";
 import { authService } from "fbase";
 import { useNavigate } from "react-router-dom";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
+
 const Sidebar = ({ width = 280, children }) => {
   const [isOpen, setOpen] = useState(false);
   const [xPosition, setX] = useState(width);
   const side = useRef();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // button 클릭 시 토글
   const toggleMenu = () => {
@@ -21,11 +23,11 @@ const Sidebar = ({ width = 280, children }) => {
 
   // 사이드바 외부 클릭시 닫히는 함수
   const handleClose = async (e) => {
-    let sideArea = side.current;
-    let sideCildren = side.current.contains(e.target);
-    if (isOpen && (!sideArea || !sideCildren)) {
-      await setX(width);
-      await setOpen(false);
+    if (side.current && !side.current.contains(e.target)) {
+      if (isOpen) {
+        await setX(width);
+        await setOpen(false);
+      }
     }
   };
   const navigate = useNavigate();
@@ -34,50 +36,65 @@ const Sidebar = ({ width = 280, children }) => {
     authService.signOut();
     navigate("/");
   };
+
   useEffect(() => {
+    // 로그인 상태 학인하고 로그인해야 사이드바 보이게
+    const unsubscribe = authService.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
     window.addEventListener("click", handleClose);
     return () => {
       window.removeEventListener("click", handleClose);
+      unsubscribe();
     };
-  });
+  }, []);
 
   return (
     <div className={styles.container}>
-      <div
-        ref={side}
-        className={styles.sidebar}
-        style={{
-          width: `${width}px`,
-          height: "100%",
-          transform: `translatex(${-xPosition}px)`,
-        }}
-      >
-        <button onClick={() => toggleMenu()} className={styles.button}>
-          {isOpen ? (
-            <FaAngleDoubleLeft
-              style={{
-                fontSize: "15px",
-              }}
-            />
-          ) : (
-            <FaAngleDoubleRight
-              style={{
-                fontSize: "15px",
-              }}
-            />
-          )}
-        </button>
+      {isLoggedIn && (
+        <>
+          <div
+            ref={side}
+            className={styles.sidebar}
+            style={{
+              width: `${width}px`,
+              height: "100%",
+              transform: `translatex(${-xPosition}px)`,
+            }}
+          >
+            <button onClick={() => toggleMenu()} className={styles.button}>
+              {isOpen ? (
+                <FaAngleDoubleLeft
+                  style={{
+                    fontSize: "15px",
+                  }}
+                />
+              ) : (
+                <FaAngleDoubleRight
+                  style={{
+                    fontSize: "15px",
+                  }}
+                />
+              )}
+            </button>
 
-        <div className={styles.content}>
-          <span className={styles.menuText}>Menu</span>
-        </div>
-        {children}
-        <div className={styles.buttonContainer}>
-          <button onClick={onLogOutClick} className={styles.log_out_button}>
-            Log Out
-          </button>
-        </div>
-      </div>
+            <div className={styles.content}>
+              <span className={styles.menuText}>Menu</span>
+            </div>
+            {children}
+            <div className={styles.buttonContainer}>
+              <button onClick={onLogOutClick} className={styles.log_out_button}>
+                Log Out
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -40,7 +40,7 @@ const Home = () => {
   <div id="map" style={{ width: 300, height: 200 }}></div>*/
   }
   return (
-    <div style={{ width: "95vw", height: "95vh" }}>
+    <div style={{ width: "85vw", height: "85vh" }}>
       <Map
         center={{ lat: 33.5563, lng: 126.79581 }}
         style={{ width: "100%", height: "100%" }}

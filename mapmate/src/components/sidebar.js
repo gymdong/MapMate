@@ -69,7 +69,11 @@ const Sidebar = ({ width = 280, children, isLoggedIn }) => {
         </button>
 
         <div className={styles.content}>
-          <span className={styles.menuText}>Menu</span>
+          {isLoggedIn ? (
+            <span className={styles.menuText}>Menu</span>
+          ) : (
+            <span className={styles.menuText_out}>Mapmate</span>
+          )}
         </div>
         {children}
         <div className={styles.buttonContainer}>

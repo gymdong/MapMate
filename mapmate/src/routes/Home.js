@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import HomeModal from "./HomeModal";
 import { authService } from "fbase";
 const { kakao } = window;
-const Home = () => {
+const Home = ({ handleCurrentLL }) => {
   const [meets, setMeets] = useState([]);
   const [isHomeModalOpen, setIsHomeModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
@@ -100,6 +100,7 @@ const Home = () => {
           }));
         }
       );
+      handleCurrentLL(state);
     } else {
       // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
       setState((prev) => ({
@@ -151,10 +152,10 @@ const Home = () => {
               const todayDate = getFormattedDate();
               const meetDateObj = new Date(meetDate);
               const todayDateobj = new Date(todayDate);
-              let fs;
-              checkFollowingStatus(item).then((followstatus) => {
-                fs = followstatus;
-              });
+              // let fs;
+              // checkFollowingStatus(item).then((followstatus) => {
+              //   fs = followstatus;
+              // });
 
               if (meetDateObj.getTime() >= todayDateobj.getTime()) {
                 //여기 조건 수정

@@ -10,11 +10,19 @@ const Profile = ({ userData }) => {
   const [isChangedUser, setIsChangedUser] = useState("");
   const [meetList, setMeetList] = useState([]);
   const [userName, setUserName] = useState("");
+  const getFormattedDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1 필요
+    const day = String(today.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
   const getMeetInfo = async () => {
-    setUserName(authService.currentUser?.displayName);
+    setUserName(authService.currentUser.displayName);
     const data = dbService
       .collection("meet_info")
-      .where("sendUserid", "==", authService.currentUser?.uid);
+      .where("sendUserid", "==", authService.currentUser.uid);
     const querySnapshot = await data.get();
     setMeetList([]);
     console.log(querySnapshot);
@@ -22,7 +30,7 @@ const Profile = ({ userData }) => {
       console.log(doc);
       const { lat, lng, sendMessage, sendUser, date, time, sendUserid } =
         doc.data();
-      if (sendUserid === authService.currentUser?.uid) {
+      if (sendUserid === authService.currentUser.uid) {
         const data = {
           lat,
           lng,
@@ -40,7 +48,7 @@ const Profile = ({ userData }) => {
   useEffect(() => {
     dbService
       .collection("user_info")
-      .where("user_id", "==", authService.currentUser?.uid)
+      .where("user_id", "==", authService.currentUser.uid)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -97,17 +105,25 @@ const Profile = ({ userData }) => {
       <div className={style.profile_meets}>
         <h2>내가 만든 약속들</h2>
         {/* 트윗 목록 */}
-        {meetList.map((val, idx) => (
-          <div className={style.meet}>
-            <p className={style.message}>
-              날짜 : {val.date + " "}
-              시간 : {val.time}
-            </p>
-            <p className={style.message}>
-              요약 : {" " + truncateMessage(val.sendMessage, 6)}
-            </p>
-          </div>
-        ))}
+        {meetList.map((val, idx) => {
+          const meetDate = val.date;
+          const todayDate = getFormattedDate();
+          const meetDateObj = new Date(meetDate);
+          const todayDateobj = new Date(todayDate);
+          if (meetDateObj.getTime() >= todayDateobj.getTime()) {
+            return (
+              <div className={style.meet}>
+                <p className={style.message}>
+                  날짜 : {val.date + " "}
+                  시간 : {val.time}
+                </p>
+                <p className={style.message}>
+                  요약 : {" " + truncateMessage(val.sendMessage, 6)}
+                </p>
+              </div>
+            );
+          }
+        })}
       </div>
       {isEditProfileOpen && (
         <EditProfile

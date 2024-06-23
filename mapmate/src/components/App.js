@@ -24,6 +24,15 @@ function App() {
   const [userData, setUserData] = useState({});
   const [selectLat, setSelectLat] = useState(0);
   const [selectLng, setSelectLng] = useState(0);
+  const [currentLL, setCurrentLL] = useState({
+    center: {
+      lat: 33.45058,
+      lng: 126.574942,
+    },
+    errMsg: null,
+    isLoading: true,
+    ispanto: false,
+  });
   const handleOpenOverlay = () => {
     setIsOverlayOpen(true);
   };
@@ -32,6 +41,9 @@ function App() {
   };
   const handleCloseOverlay = () => {
     setIsOverlayOpen(false);
+  };
+  const handleCurrentLL = (state) => {
+    setCurrentLL(state);
   };
   const location = useLocation();
   useEffect(() => {
@@ -44,6 +56,7 @@ function App() {
       }
       setInit(true);
     });
+    console.log(currentLL);
   }, []);
   const sendMeetInfo = async (event) => {
     event.preventDefault();
@@ -93,7 +106,10 @@ function App() {
             <div className={style.modal_content}>
               <p className={style.headerText}>약속 장소와 날짜를 선택하세요!</p>
               <Map
-                center={{ lat: 33.5563, lng: 126.79581 }}
+                center={{
+                  lat: currentLL.center.lat,
+                  lng: currentLL.center.lng,
+                }}
                 style={{ width: "460px", height: "300px" }}
                 onClick={(_, mouseEvent) => {
                   const latlng = mouseEvent.latLng;
@@ -140,7 +156,11 @@ function App() {
             <Routes location={location}>
               {isLoggedIn ? (
                 <>
-                  <Route exact path="/" element={<Home />}></Route>
+                  <Route
+                    exact
+                    path="/"
+                    element={<Home handleCurrentLL={handleCurrentLL} />}
+                  ></Route>
                   <Route exact path="/friend" element={<Friend />}></Route>
                   <Route exact path="/alert" element={<Alert />}></Route>
                   <Route

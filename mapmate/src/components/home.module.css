@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .container {
   background-color: #f7ff8a;
   display: flex;
@@ -64,10 +70,47 @@ textarea {
 
 .submit_btn {
   padding: 10px 20px;
-  font-size: 16px;
   background-color: #e3f352;
   color: black;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  font-family: "Arial", sans-serif; /* 원하는 폰트 패밀리 */
+  font-size: 30px; /* 폰트 크기 */
+  color: #333; /* 텍스트 색상 */
+  transition: transform 0.3s;
+}
+.submit_btn:hover {
+  transform: scale(1.05);
+}
+.submit_btn:active {
+  transform: scale(0.95);
+}
+.buttonContainer {
+  padding: 10px;
+  padding-right: 20px;
+  margin-left: 10px;
+}
+.sendInput {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: "Arial", sans-serif;
+}
+.sendInput:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+.sendTextArea {
+  width: 100%;
+}
+.headerText {
+  font-family: "Arial", sans-serif; /* 원하는 폰트 패밀리 */
+  font-size: 25px; /* 폰트 크기 */
+  font-weight: bold;
 }

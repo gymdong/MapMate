@@ -13,33 +13,44 @@ const Navigation = () => {
     <nav>
       <div>
         <div className={styles.menuView}>
+          <FaHome
+            style={{ fontSize: "33px", marginRight: "10px", marginTop: "10px" }}
+          />{" "}
           {/* 사용할 아이콘 */}
-          <Link to="/">
-            <span>Home</span>
+          <Link to="/" className={styles.menuLinkBox}>
+            <span className={styles.menuText}>Home</span>
           </Link>
         </div>
         <div className={styles.menuView}>
-          <FaComment style={{ fontSize: "2em", marginRight: "10px" }} />{" "}
-          <Link to="/alert">
-            <span>Alert</span>
+          <FaComment
+            style={{ fontSize: "33px", marginRight: "10px", marginTop: "10px" }}
+          />{" "}
+          <Link to="/alert" className={styles.menuLinkBox}>
+            <span className={styles.menuText}>Alert</span>
           </Link>
         </div>
         <div className={styles.menuView}>
-          <FaUserFriends style={{ fontSize: "2em", marginRight: "10spanx" }} />{" "}
-          <Link to="/friend">
-            <span>Friend</span>
+          <FaCalendarCheck
+            style={{ fontSize: "33px", marginRight: "10px", marginTop: "10px" }}
+          />{" "}
+          <Link to="/calendar" className={styles.menuLinkBox}>
+            <span className={styles.menuText}>Calendar</span>
           </Link>
         </div>
         <div className={styles.menuView}>
-          <FaUserAlt style={{ fontSize: "2em", marginRight: "10px" }} />{" "}
-          <Link to="/profile">
-            <span>My Profile</span>
+          <FaUserFriends
+            style={{ fontSize: "33px", marginRight: "10px", marginTop: "10px" }}
+          />{" "}
+          <Link to="/friend" className={styles.menuLinkBox}>
+            <span className={styles.menuText}>Friend</span>
           </Link>
         </div>
         <div className={styles.menuView}>
-          <FaCalendarCheck style={{ fontSize: "2em", marginRight: "10px" }} />{" "}
-          <Link to="/calendar">
-            <span>Calendar</span>
+          <FaUserAlt
+            style={{ fontSize: "33px", marginRight: "10px", marginTop: "10px" }}
+          />{" "}
+          <Link to="/profile" className={styles.menuLinkBox}>
+            <span className={styles.menuText}>My Profile</span>
           </Link>
         </div>
       </div>

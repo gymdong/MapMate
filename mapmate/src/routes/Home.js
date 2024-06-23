@@ -41,10 +41,6 @@ const Home = () => {
   }
   return (
     <div style={{ width: "95vw", height: "95vh" }}>
-      <div>
-        <p>홈 화면입니다!</p>
-      </div>
-
       <Map
         center={{ lat: 33.5563, lng: 126.79581 }}
         style={{ width: "100%", height: "100%" }}

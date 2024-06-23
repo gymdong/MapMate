@@ -3,7 +3,7 @@
 }
 .sidebar {
   background-color: #f7ff8a;
-  border-right: 4px solid #202020;
+  border-right: 1px solid #202020;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -13,6 +13,13 @@
   height: 100%;
   z-index: 99;
 }
+.menuText {
+  font-family: "Arial", sans-serif; /* 원하는 폰트 패밀리 */
+  font-weight: bolder;
+  font-size: 36px; /* 폰트 크기 */
+  color: #333; /* 텍스트 색상 */
+  /* 기타 스타일 */
+}
 .button {
   position: relative;
   left: 330px;
@@ -21,7 +28,7 @@
   height: 40px;
   z-index: 99;
   transition: 0.8s ease;
-  border: 2px solid #202020;
+  border: 1px solid #202020;
   border-radius: 40px;
   overflow: hidden;
 }
@@ -30,10 +37,9 @@
   height: 100%;
 }
 .content {
-  padding: 40px 40px 0 20px;
+  padding: 20px;
   position: relative;
   width: 100%;
-  border: 1px solid rgb(236, 0, 0);
 }
 .icon {
   margin: 0;
@@ -41,8 +47,9 @@
 }
 .log_out_button {
   padding: 10px 20px;
-  font-size: 16px;
-  color: white;
+  font-family: "Arial", sans-serif; /* 원하는 폰트 패밀리 */
+  font-size: 15px; /* 폰트 크기 */
+  color: #333; /* 텍스트 색상 */
   background-color: #cccccc; /* Twitter-like blue */
   border: none;
   border-radius: 25px;
@@ -59,4 +66,8 @@
 .log_out_button:active {
   background-color: #cccccce0(207 45% 9%); /* Even darker blue on click */
   transform: scale(0.95);
+}
+.buttonContainer {
+  padding: 10px;
+  margin-left: 10px;
 }

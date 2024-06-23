@@ -89,10 +89,10 @@ function App() {
               &times;
             </button>
             <div className={style.modal_content}>
-              <p>약속 장소와 날짜를 선택하세요!</p>
+              <p className={style.headerText}>약속 장소와 날짜를 선택하세요!</p>
               <Map
                 center={{ lat: 33.5563, lng: 126.79581 }}
-                style={{ width: "400px", height: "300px" }}
+                style={{ width: "460px", height: "300px" }}
                 onClick={(_, mouseEvent) => {
                   const latlng = mouseEvent.latLng;
                   setSelectLat(latlng.getLat());
@@ -102,17 +102,22 @@ function App() {
                 <MapMarker position={{ lat: selectLat, lng: selectLng }} />
               </Map>
               <div>
-                <input type="date" id="meet_start" />
-                <input id="meet_time" type="time" />
+                <input
+                  type="date"
+                  id="meet_start"
+                  className={style.sendInput}
+                />
+                <input id="meet_time" type="time" className={style.sendInput} />
               </div>
               <textarea
                 placeholder="약속 내용이 무엇인가요?"
                 rows="4"
                 id="subText"
+                className={style.sendTextArea}
               ></textarea>
 
               <button className={style.submit_btn} onClick={sendMeetInfo}>
-                전송
+                Send
               </button>
             </div>
           </div>
@@ -145,9 +150,11 @@ function App() {
         </div>
         <Sidebar width={320}>
           {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
-          <button onClick={handleOpenOverlay} className={style.submit_btn}>
-            새 약속 만들기
-          </button>
+          <div className={style.buttonContainer}>
+            <button onClick={handleOpenOverlay} className={style.submit_btn}>
+              Create New Meeting
+            </button>
+          </div>
         </Sidebar>
       </BrowserRouter>
     </div>

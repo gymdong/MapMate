@@ -107,7 +107,10 @@ const Home = () => {
           level={6}
           onCenterChanged={changedCenter}
         >
-          <MapMarker position={state.center}>
+          <MapMarker
+            position={state.center}
+            infoWindowOptions={{ disableAutoPan: true }}
+          >
             <div style={{ padding: "5px", color: "#000" }}>
               {state.errMsg ? state.errMsg : "여기에 계신가요?!"}
             </div>
@@ -131,6 +134,7 @@ const Home = () => {
                     onClick={() => {
                       clickMarker(item);
                     }}
+                    infoWindowOptions={{ disableAutoPan: true }}
                   >
                     <div
                       style={{

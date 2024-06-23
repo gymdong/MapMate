@@ -30,7 +30,7 @@ const Sidebar = ({ width = 280, children, isLoggedIn }) => {
   };
   const navigate = useNavigate();
 
-  const onLogOutClick = () => {
+  const onLogOutClick = async () => {
     navigate("/");
     authService.signOut();
   };

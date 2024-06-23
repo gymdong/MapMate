@@ -19,48 +19,52 @@ const Profile = ({ userData }) => {
     return `${year}-${month}-${day}`;
   };
   const getMeetInfo = async () => {
-    setUserName(authService.currentUser.displayName);
-    const data = dbService
-      .collection("meet_info")
-      .where("sendUserid", "==", authService.currentUser.uid);
-    const querySnapshot = await data.get();
-    setMeetList([]);
-    console.log(querySnapshot);
-    querySnapshot.forEach((doc) => {
-      console.log(doc);
-      const { lat, lng, sendMessage, sendUser, date, time, sendUserid } =
-        doc.data();
-      if (sendUserid === authService.currentUser.uid) {
-        const data = {
-          lat,
-          lng,
-          sendMessage,
-          sendUser,
-          date,
-          time,
-          sendUserid,
-        };
-        setMeetList((arr) => (arr ? [...arr, data] : [data]));
-      }
-    });
+    if (authService.currentUser) {
+      setUserName(authService.currentUser.displayName);
+      const data = dbService
+        .collection("meet_info")
+        .where("sendUserid", "==", authService.currentUser.uid);
+      const querySnapshot = await data.get();
+      setMeetList([]);
+      console.log(querySnapshot);
+      querySnapshot.forEach((doc) => {
+        console.log(doc);
+        const { lat, lng, sendMessage, sendUser, date, time, sendUserid } =
+          doc.data();
+        if (sendUserid === authService.currentUser.uid) {
+          const data = {
+            lat,
+            lng,
+            sendMessage,
+            sendUser,
+            date,
+            time,
+            sendUserid,
+          };
+          setMeetList((arr) => (arr ? [...arr, data] : [data]));
+        }
+      });
+    }
     console.log(meetList);
   };
   useEffect(() => {
-    dbService
-      .collection("user_info")
-      .where("user_id", "==", authService.currentUser.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const userData = doc.data(); // 문서의 데이터를 가져옴
-          setUserProfile(userData.profile_picture);
-          setUserBio(userData.user_bio);
-          console.log("프로필 사진 URL:", userProfile);
+    if (authService.currentUser) {
+      dbService
+        .collection("user_info")
+        .where("user_id", "==", authService.currentUser.uid)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const userData = doc.data(); // 문서의 데이터를 가져옴
+            setUserProfile(userData.profile_picture);
+            setUserBio(userData.user_bio);
+            console.log("프로필 사진 URL:", userProfile);
+          });
+        })
+        .catch((error) => {
+          console.error("Error getting documents: ", error);
         });
-      })
-      .catch((error) => {
-        console.error("Error getting documents: ", error);
-      });
+    }
   }, [isEditProfileOpen]); //이거 수정될때마다 리렌더링하도록하자
   useEffect(() => getMeetInfo, []);
   const handleOpenEditProfile = () => {
@@ -90,7 +94,7 @@ const Profile = ({ userData }) => {
           <div className={style.profile_details}>
             <h1 className={style.profile_name}>{userName}</h1>
             <p className={style.profile_username}>
-              {authService.currentUser.email}
+              {authService.currentUser ? authService.currentUser.email : " "}
             </p>
             <p className={style.profile_bio}>{userBio}</p>
             <button

@@ -13,25 +13,22 @@ function CalendarView() {
   const [selectedMeet, setSelectedMeet] = useState([]);
 
   const getMeetInfo = async () => {
-    const data = dbService
-      .collection("meet_info")
-      .where("sendUserid", "==", authService.currentUser.uid);
-    const querySnapshot = await data.get();
-    setMeetList([]);
-    querySnapshot.forEach((doc) => {
-      console.log(doc);
-      const {
-        lat,
-        lng,
-        sendMessage,
-        sendUser,
-        date,
-        time,
-        member,
-        sendUserid,
-      } = doc.data();
-      if (sendUserid === authService.currentUser.uid) {
-        const data = {
+    let data;
+    if (authService.currentUser) {
+      data = dbService
+        .collection("meet_info")
+        .where("sendUserid", "==", authService.currentUser.uid);
+    } else {
+      // currentUser가 null인 경우 처리
+      console.log("User is not logged in");
+      data = null; // 혹은 다른 적절한 초기화 작업
+    }
+    if (authService.currentUser) {
+      const querySnapshot = await data.get();
+      setMeetList([]);
+      querySnapshot.forEach((doc) => {
+        console.log(doc);
+        const {
           lat,
           lng,
           sendMessage,
@@ -40,10 +37,26 @@ function CalendarView() {
           time,
           member,
           sendUserid,
-        };
-        setMeetList((arr) => (arr ? [...arr, data] : [data]));
-      }
-    });
+        } = doc.data();
+        if (sendUserid === authService.currentUser.uid) {
+          const data = {
+            lat,
+            lng,
+            sendMessage,
+            sendUser,
+            date,
+            time,
+            member,
+            sendUserid,
+          };
+          setMeetList((arr) => (arr ? [...arr, data] : [data]));
+        }
+      });
+    } else {
+      // currentUser가 null인 경우 처리
+      console.log("User is not logged in");
+      data = null; // 혹은 다른 적절한 초기화 작업
+    }
   };
 
   const handleDateClick = (date) => {

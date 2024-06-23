@@ -15,6 +15,8 @@ import { dbService } from "fbase";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import { useLocation } from "react-router-dom";
+import InfoMenu from "./infoMenu";
+
 const { kakao } = window;
 function App() {
   console.log(authService.currentUser);
@@ -190,7 +192,7 @@ function App() {
               Create New Meeting
             </button>
           ) : (
-            <></>
+            <InfoMenu />
           )}
         </div>
       </Sidebar>

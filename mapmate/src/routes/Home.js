@@ -12,6 +12,7 @@ const Home = ({ handleCurrentLL }) => {
   const [selectedItem, setSelectedItem] = useState();
   const [isMountFinished, setIsMountFinished] = useState(false);
   const [setRetVal, setSetRetVal] = useState(true);
+  const [conditionResults, setConditionResults] = useState([]); // 조건 결과 저장
   const [state, setState] = useState({
     center: {
       lat: 33.45058,
@@ -21,6 +22,7 @@ const Home = ({ handleCurrentLL }) => {
     isLoading: true,
     ispanto: false,
   });
+
   const getFormattedDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -35,6 +37,10 @@ const Home = ({ handleCurrentLL }) => {
     setIsHomeModalOpen(true);
   };
   const checkFollowingStatus = async (data) => {
+    if (!data) {
+      console.error("error occured");
+      return await Promise.resolve(false);
+    }
     const currentUser = authService.currentUser;
     const querySnapshot = await dbService
       .collection("user_info")
@@ -51,6 +57,7 @@ const Home = ({ handleCurrentLL }) => {
     }
 
     if (currentUser) {
+      console.log(uEmail);
       const followQuery = await dbService
         .collection("follow_info")
         .where("sender", "==", currentUser.email)
@@ -60,9 +67,9 @@ const Home = ({ handleCurrentLL }) => {
         console.log(val.data());
       });
       if (!followQuery.empty) {
-        return true;
+        return await Promise.resolve(true);
       } else {
-        return false;
+        return await Promise.resolve(false);
       }
     }
   };
@@ -77,7 +84,23 @@ const Home = ({ handleCurrentLL }) => {
     //console.log(meets);
     setIsMountFinished(true);
   }, []);
+  useEffect(() => {
+    const checkAllConditions = async () => {
+      const results = await Promise.all(
+        meets.map(async (val) => {
+          if (val !== undefined && val !== null) {
+            return await checkFollowingStatus(val);
+          } else {
+            console.error("Invalid meet value:", val);
+            return false;
+          }
+        })
+      );
+      setConditionResults(results);
+    };
 
+    checkAllConditions();
+  }, [meets]);
   useEffect(() => {
     if (navigator.geolocation) {
       // GeoLocation을 이용해서 접속 위치를 얻어옵니다
@@ -118,17 +141,6 @@ const Home = ({ handleCurrentLL }) => {
     setIsHomeModalOpen(false);
   };
 
-  {
-    /*useEffect(() => {
-    const container = document.getElementById("map");
-    const options = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3,
-    };
-    const map = new kakao.maps.Map(container, options);
-  }, []);
-  <div id="map" style={{ width: 300, height: 200 }}></div>*/
-  }
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       {isMountFinished && (
@@ -157,7 +169,11 @@ const Home = ({ handleCurrentLL }) => {
               //   fs = followstatus;
               // });
 
-              if (meetDateObj.getTime() >= todayDateobj.getTime()) {
+              if (
+                meetDateObj.getTime() >= todayDateobj.getTime() &&
+                (conditionResults[idx] ||
+                  item.sendUserid == authService.currentUser.uid)
+              ) {
                 //여기 조건 수정
                 return (
                   <MapMarker

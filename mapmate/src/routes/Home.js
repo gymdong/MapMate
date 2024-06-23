@@ -143,7 +143,7 @@ const Home = ({ handleCurrentLL }) => {
             infoWindowOptions={{ disableAutoPan: true }}
           >
             <div style={{ padding: "5px", color: "#000" }}>
-              {state.errMsg ? state.errMsg : "여기에 계신가요?!"}
+              {state.errMsg ? state.errMsg : "현재 위치입니다!"}
             </div>
           </MapMarker>
           {meets.length > 1 &&
@@ -178,7 +178,7 @@ const Home = ({ handleCurrentLL }) => {
                         color: "#000",
                       }}
                     >
-                      {item.sendMessage}
+                      {item.sendMessage.substring(0, 8) + "..."}
                     </div>
                   </MapMarker>
                 );

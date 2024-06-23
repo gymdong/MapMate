@@ -24,19 +24,26 @@ function HomeModal({ onClose, item }) {
     }
     return message;
   };
-  
+
   const notifyMembers = async (message, excludeSelf = true) => {
     const memberNotifications = members.map(async (member) => {
-      const userQuery = await dbService.collection("user_info").where("user_name", "==", member).get();
+      const userQuery = await dbService
+        .collection("user_info")
+        .where("user_name", "==", member)
+        .get();
       const userData = userQuery.docs[0]?.data();
-  
-      if (userData && (!excludeSelf || userData.user_email !== currentUser.email)) {
+
+      if (
+        userData &&
+        (!excludeSelf || userData.user_email !== currentUser.email)
+      ) {
         // 이미 해당 유저에게 같은 메시지가 있는지 확인
-        const existingNotificationQuery = await dbService.collection("notifications")
+        const existingNotificationQuery = await dbService
+          .collection("notifications")
           .where("userId", "==", userData.user_email)
           .where("message", "==", message)
           .get();
-  
+
         if (existingNotificationQuery.empty) {
           // 중복 알림이 없으면 알림 추가
           await dbService.collection("notifications").add({
@@ -48,7 +55,7 @@ function HomeModal({ onClose, item }) {
         }
       }
     });
-  
+
     await Promise.all(memberNotifications);
   };
 
@@ -77,7 +84,9 @@ function HomeModal({ onClose, item }) {
                 alert("참여 성공!");
                 console.log("멤버 추가 성공");
                 const truncatedMessage = truncateMessage(item.sendMessage, 5);
-                notifyMembers(`${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속에 참여했습니다.`);
+                notifyMembers(
+                  `${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속에 참여했습니다.`
+                );
               })
               .catch((error) => {
                 console.error("멤버 추가 오류:", error);
@@ -105,7 +114,9 @@ function HomeModal({ onClose, item }) {
       .delete()
       .then(async () => {
         const truncatedMessage = truncateMessage(item.sendMessage, 5);
-        await notifyMembers(`${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속을 삭제했습니다.`);
+        await notifyMembers(
+          `${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속을 삭제했습니다.`
+        );
         alert("약속 삭제 성공!");
         console.log("삭제 성공");
         onClose(); // 삭제 후 모달 닫기
@@ -129,22 +140,27 @@ function HomeModal({ onClose, item }) {
         return;
       }
 
-      await docRef.update({
-        sendMessage: newMessage,
-        date: newDate,
-        time: newTime,
-        lat: newLat,
-        lng: newLng,
-      }).then(async () => {
-        const truncatedMessage = truncateMessage(item.sendMessage, 5);
-        await notifyMembers(`${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속을 수정했습니다.`);
-        alert("약속 수정 성공!");
-        console.log("수정 성공");
-        setIsEditing(false);
-        onClose();
-      }).catch((error) => {
-        console.error("약속 수정 오류:", error);
-      });
+      await docRef
+        .update({
+          sendMessage: newMessage,
+          date: newDate,
+          time: newTime,
+          lat: newLat,
+          lng: newLng,
+        })
+        .then(async () => {
+          const truncatedMessage = truncateMessage(item.sendMessage, 5);
+          await notifyMembers(
+            `${authService.currentUser.displayName}님이 "${truncatedMessage}" 약속을 수정했습니다.`
+          );
+          alert("약속 수정 성공!");
+          console.log("수정 성공");
+          setIsEditing(false);
+          onClose();
+        })
+        .catch((error) => {
+          console.error("약속 수정 오류:", error);
+        });
     } else {
       console.error("문서를 찾을 수 없습니다.");
     }
@@ -161,15 +177,20 @@ function HomeModal({ onClose, item }) {
         <button className={style.close_modal_btn} onClick={onClose}>
           &times;
         </button>
-        <h2>약속 정보</h2>
+        <h1>약속 정보</h1>
         <div className={style.edit_profile_content}>
           {!isEditing ? (
-            <div>
-              <a href={mapLink} target="_blank" rel="noopener noreferrer">
-                카카오맵에서 위치 확인하기
+            <div className={style.meetContainer}>
+              <a
+                href={mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={style.meetText}
+              >
+                카카오맵에서 위치 확인 바로가기
               </a>
-              <p>
-                개설자:{" "}
+              <p className={style.meetText}>
+                개설자 :{" "}
                 <span
                   onClick={() => {
                     if (item.sendUserid) {
@@ -184,34 +205,48 @@ function HomeModal({ onClose, item }) {
                     cursor: "pointer",
                     textDecoration: "underline",
                   }}
+                  className={style.meetText}
                 >
                   {item.sendUser}
                 </span>
               </p>
-              <p>날짜: {item.date}</p>
-              <p>시간: {item.time}</p>
-              <p>정보: {item.sendMessage}</p>
-              <p>
-                현재 참여자:{" "}
+              <p className={style.meetText}>
+                날짜 : {item.date} {item.time}
+              </p>
+              <p className={style.meetText}>내용 : {item.sendMessage}</p>
+              <p className={style.meetText}>
+                현재 참여자 :{" "}
                 {members.map((mem, idx) => (
                   <span key={idx}>
                     {idx === members.length - 1 ? mem : mem + ", "}
                   </span>
                 ))}
               </p>
-              <button onClick={joinToMeet}>참여하기</button>
-              {(isMember || item.sendUserid === currentUser.uid) && (
-                <>
-                  <button onClick={() => setIsEditing(true)} style={{ marginLeft: "10px" }}>
-                    약속 수정
-                  </button>
-                  {item.sendUserid === currentUser.uid && (
-                    <button onClick={deleteMeet} style={{ marginLeft: "10px" }}>
-                      약속 삭제
+              <div className={style.buttonContainer}>
+                <button onClick={joinToMeet} className={style.meetButton}>
+                  참여하기
+                </button>
+                {(isMember || item.sendUserid === currentUser.uid) && (
+                  <>
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      style={{ marginLeft: "10px" }}
+                      className={style.meetButton}
+                    >
+                      약속 수정
                     </button>
-                  )}
-                </>
-              )}
+                    {item.sendUserid === currentUser.uid && (
+                      <button
+                        onClick={deleteMeet}
+                        style={{ marginLeft: "10px" }}
+                        className={style.meetButton}
+                      >
+                        약속 삭제
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           ) : (
             <div className={style.modal_content}>

@@ -31,6 +31,7 @@
   border: 1px solid #202020;
   border-radius: 40px;
   overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 .openBtn {
   width: 100%;
@@ -56,6 +57,7 @@
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   outline: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .log_out_button:hover {

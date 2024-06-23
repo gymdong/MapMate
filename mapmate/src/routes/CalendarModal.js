@@ -57,17 +57,24 @@ function CalendarModal({ onClose, meet, selectedDate }) {
               const encodedMarkerName = encodeURIComponent(val.sendMessage);
               const mapLink = `https://map.kakao.com/link/map/${encodedMarkerName},${val.lat},${val.lng}`;
               return (
-                <div>
-                  <a href={mapLink} target="_blank" rel="noopener noreferrer">
+                <div className={style.meetContainer_c}>
+                  <a
+                    className={style.meetText}
+                    href={mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     카카오맵에서 위치 확인하기
                   </a>
-                  <p>날짜: {val.date}</p>
-                  <p>시간: {val.time}</p>
+                  <p className={style.meetText}>
+                    날짜: {val.date + " "}
+                    {val.time}
+                  </p>
                   <p></p>
                   {/* 여기 주소값으로 수정해야함 */}
-                  <p>내용: {val.sendMessage}</p>
-                  <p>
-                    인원:{" "}
+                  <p className={style.meetText}>내용: {val.sendMessage}</p>
+                  <p className={style.meetText}>
+                    현재 참여자:{" "}
                     {val.member?.map((mem, idx) => (
                       <span key={idx}>
                         {idx === val.member.length - 1 ? mem : mem + ", "}

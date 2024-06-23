@@ -2,10 +2,20 @@ import React, { useState } from "react";
 import style from "./EditProfile.module.css";
 import { authService, dbService } from "fbase";
 import OtherUserProfile from "./OtherUserProfile";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 function HomeModal({ onClose, item }) {
   const [isOtherUserProfileOpen, setIsOtherUserProfileOpen] = useState(false);
   const [otherUserId, setOtherUserId] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [existingLat] = useState(item.lat);
+  const [existingLng] = useState(item.lng);
+  const [newLat, setNewLat] = useState(item.lat);
+  const [newLng, setNewLng] = useState(item.lng);
+  const [newDate, setNewDate] = useState(item.date);
+  const [newTime, setNewTime] = useState(item.time);
+  const [newMessage, setNewMessage] = useState(item.sendMessage);
+  const [members, setMembers] = useState(item.member); // 멤버 상태 추가
   const currentUser = authService.currentUser;
 
   const joinToMeet = async () => {
@@ -25,13 +35,19 @@ function HomeModal({ onClose, item }) {
                 ],
               })
               .then(() => {
+                // 상태 업데이트
+                setMembers((prevMembers) => [
+                  ...prevMembers,
+                  authService.currentUser.displayName,
+                ]);
+                alert("참여 성공!");
                 console.log("멤버 추가 성공");
               })
               .catch((error) => {
                 console.error("멤버 추가 오류:", error);
               });
           } else {
-            alert("중복된 멤버입니다.");
+            alert("이미 참여한 약속입니다.");
           }
         } else {
           console.error("문서를 찾을 수 없습니다.");
@@ -61,8 +77,43 @@ function HomeModal({ onClose, item }) {
       });
   };
 
+  const editMeet = async (event) => {
+    event.preventDefault();
+    const docRef = dbService.collection("meet_info").doc(item.mid);
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+      const currentData = doc.data();
+      const currentMembers = currentData.member || [];
+
+      if (!currentMembers.includes(currentUser.displayName)) {
+        alert("약속의 멤버만 수정할 수 있습니다.");
+        return;
+      }
+
+      await docRef.update({
+        sendMessage: newMessage,
+        date: newDate,
+        time: newTime,
+        lat: newLat,
+        lng: newLng,
+      }).then(() => {
+        alert("약속 수정 성공!");
+        console.log("수정 성공");
+        setIsEditing(false);
+        onClose();
+      }).catch((error) => {
+        console.error("약속 수정 오류:", error);
+      });
+    } else {
+      console.error("문서를 찾을 수 없습니다.");
+    }
+  };
+
   const encodedMarkerName = encodeURIComponent(item.sendMessage);
   const mapLink = `https://map.kakao.com/link/map/${encodedMarkerName},${item.lat},${item.lng}`;
+
+  const isMember = members.includes(currentUser.displayName);
 
   return (
     <div className={style.modal_overlay}>
@@ -72,48 +123,98 @@ function HomeModal({ onClose, item }) {
         </button>
         <h2>약속 정보</h2>
         <div className={style.edit_profile_content}>
-          <div>
-            <a href={mapLink} target="_blank" rel="noopener noreferrer">
-              카카오맵에서 위치 확인하기
-            </a>
-            <p>
-              개설자:{" "}
-              <span
-                onClick={() => {
-                  if (item.sendUserid) {
-                    setOtherUserId(item.sendUserid);
-                    setIsOtherUserProfileOpen(true);
-                  } else {
-                    alert("존재하지 않는 유저입니다."); // 데이터베이스 meet_info에 sendUserid가 없을 경우
-                  }
-                }}
-                style={{
-                  color: "blue",
-                  cursor: "pointer",
-                  textDecoration: "underline",
+          {!isEditing ? (
+            <div>
+              <a href={mapLink} target="_blank" rel="noopener noreferrer">
+                카카오맵에서 위치 확인하기
+              </a>
+              <p>
+                개설자:{" "}
+                <span
+                  onClick={() => {
+                    if (item.sendUserid) {
+                      setOtherUserId(item.sendUserid);
+                      setIsOtherUserProfileOpen(true);
+                    } else {
+                      alert("존재하지 않는 유저입니다.");
+                    }
+                  }}
+                  style={{
+                    color: "blue",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {item.sendUser}
+                </span>
+              </p>
+              <p>날짜: {item.date}</p>
+              <p>시간: {item.time}</p>
+              <p>정보: {item.sendMessage}</p>
+              <p>
+                현재 참여자:{" "}
+                {members.map((mem, idx) => (
+                  <span key={idx}>
+                    {idx === members.length - 1 ? mem : mem + ", "}
+                  </span>
+                ))}
+              </p>
+              <button onClick={joinToMeet}>참여하기</button>
+              {(isMember || item.sendUserid === currentUser.uid) && (
+                <>
+                  <button onClick={() => setIsEditing(true)} style={{ marginLeft: "10px" }}>
+                    약속 수정
+                  </button>
+                  {item.sendUserid === currentUser.uid && (
+                    <button onClick={deleteMeet} style={{ marginLeft: "10px" }}>
+                      약속 삭제
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+          ) : (
+            <div className={style.modal_content}>
+              <Map
+                center={{ lat: existingLat, lng: existingLng }}
+                style={{ width: "460px", height: "300px" }}
+                onClick={(_, mouseEvent) => {
+                  const latlng = mouseEvent.latLng;
+                  setNewLat(latlng.getLat());
+                  setNewLng(latlng.getLng());
                 }}
               >
-                {item.sendUser}
-              </span>
-            </p>
-            <p>날짜: {item.date}</p>
-            <p>시간: {item.time}</p>
-            <p>정보: {item.sendMessage}</p>
-            <p>
-              현재 참여자:{" "}
-              {item.member.map((mem, idx) => (
-                <span key={idx}>
-                  {idx === item.member.length - 1 ? mem : mem + ", "}
-                </span>
-              ))}
-            </p>
-            <button onClick={joinToMeet}>참여하기</button>
-            {item.sendUserid === currentUser.uid && (
-              <button onClick={deleteMeet} style={{ marginLeft: "10px" }}>
-                약속 삭제
+                <MapMarker position={{ lat: newLat, lng: newLng }} />
+              </Map>
+              <div>
+                <input
+                  type="date"
+                  id="meet_start"
+                  className={style.sendInput}
+                  value={newDate}
+                  onChange={(e) => setNewDate(e.target.value)}
+                />
+                <input
+                  id="meet_time"
+                  type="time"
+                  className={style.sendInput}
+                  value={newTime}
+                  onChange={(e) => setNewTime(e.target.value)}
+                />
+              </div>
+              <textarea
+                placeholder="약속 내용이 무엇인가요?"
+                rows="4"
+                id="subText"
+                className={style.sendTextArea}
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              ></textarea>
+              <button className={style.submit_btn} onClick={editMeet}>
+                수정하기
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
       {isOtherUserProfileOpen && (

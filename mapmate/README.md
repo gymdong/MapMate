@@ -5,6 +5,7 @@
 ## How to use?
 
 `cd mapmate`
+
 앱을 실행하는 경로는 Mapmate 폴더에서 mapmate 폴더로 한 번 들어가야 합니다.
 
 `npm install`

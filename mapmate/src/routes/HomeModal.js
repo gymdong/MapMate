@@ -285,9 +285,11 @@ function HomeModal({ onClose, item }) {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
               ></textarea>
-              <button className={style.submit_btn} onClick={editMeet}>
-                수정하기
-              </button>
+              <div className={style.buttonBox}>
+                <button className={style.meetButton} onClick={editMeet}>
+                  수정하기
+                </button>
+              </div>
             </div>
           )}
         </div>

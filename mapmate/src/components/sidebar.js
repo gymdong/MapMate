@@ -31,8 +31,8 @@ const Sidebar = ({ width = 280, children, isLoggedIn }) => {
   const navigate = useNavigate();
 
   const onLogOutClick = () => {
-    authService.signOut();
     navigate("/");
+    authService.signOut();
   };
   useEffect(() => {
     window.addEventListener("click", handleClose);

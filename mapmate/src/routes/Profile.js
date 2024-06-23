@@ -11,10 +11,10 @@ const Profile = ({ userData }) => {
   const [meetList, setMeetList] = useState([]);
   const [userName, setUserName] = useState("");
   const getMeetInfo = async () => {
-    setUserName(authService.currentUser.displayName);
+    setUserName(authService.currentUser?.displayName);
     const data = dbService
       .collection("meet_info")
-      .where("sendUserid", "==", authService.currentUser.uid);
+      .where("sendUserid", "==", authService.currentUser?.uid);
     const querySnapshot = await data.get();
     setMeetList([]);
     console.log(querySnapshot);
@@ -22,7 +22,7 @@ const Profile = ({ userData }) => {
       console.log(doc);
       const { lat, lng, sendMessage, sendUser, date, time, sendUserid } =
         doc.data();
-      if (sendUserid === authService.currentUser.uid) {
+      if (sendUserid === authService.currentUser?.uid) {
         const data = {
           lat,
           lng,
@@ -40,7 +40,7 @@ const Profile = ({ userData }) => {
   useEffect(() => {
     dbService
       .collection("user_info")
-      .where("user_id", "==", authService.currentUser.uid)
+      .where("user_id", "==", authService.currentUser?.uid)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {

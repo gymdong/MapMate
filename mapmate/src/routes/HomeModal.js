@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import style from "./EditProfile.module.css";
 import { authService, dbService } from "fbase";
 import OtherUserProfile from "./OtherUserProfile";
 
 function HomeModal({ onClose, item }) {
-  console.log(item);
   const [isOtherUserProfileOpen, setIsOtherUserProfileOpen] = useState(false);
   const [otherUserId, setOtherUserId] = useState("");
+  const currentUser = authService.currentUser;
 
   const joinToMeet = async () => {
-    //console.log(item);
     const docRef = await dbService.collection("meet_info").doc(item.mid);
     docRef
       .get()
@@ -17,7 +16,6 @@ function HomeModal({ onClose, item }) {
         if (doc.exists) {
           const currentData = doc.data();
           const currentMembers = currentData.member || [];
-          // 중복 확인 후 멤버 추가
           if (!currentMembers.includes(authService.currentUser.displayName)) {
             docRef
               .update({
@@ -43,8 +41,29 @@ function HomeModal({ onClose, item }) {
         console.error("문서 가져오기 오류:", error);
       });
   };
+
+  const deleteMeet = async () => {
+    if (item.sendUserid !== currentUser.uid) {
+      alert("본인이 만든 약속만 삭제할 수 있습니다.");
+      return;
+    }
+
+    const docRef = dbService.collection("meet_info").doc(item.mid);
+    docRef
+      .delete()
+      .then(() => {
+        alert("약속 삭제 성공!");
+        console.log("삭제 성공");
+        onClose(); // 삭제 후 모달 닫기
+      })
+      .catch((error) => {
+        console.error("약속 삭제 오류:", error);
+      });
+  };
+
   const encodedMarkerName = encodeURIComponent(item.sendMessage);
   const mapLink = `https://map.kakao.com/link/map/${encodedMarkerName},${item.lat},${item.lng}`;
+
   return (
     <div className={style.modal_overlay}>
       <div className={style.modal}>
@@ -65,7 +84,7 @@ function HomeModal({ onClose, item }) {
                     setOtherUserId(item.sendUserid);
                     setIsOtherUserProfileOpen(true);
                   } else {
-                    alert("존재하지 않는 유저입니다."); //데이터베이스 meet_info에 sendUserid가 없을 경우
+                    alert("존재하지 않는 유저입니다."); // 데이터베이스 meet_info에 sendUserid가 없을 경우
                   }
                 }}
                 style={{
@@ -89,6 +108,11 @@ function HomeModal({ onClose, item }) {
               ))}
             </p>
             <button onClick={joinToMeet}>참여하기</button>
+            {item.sendUserid === currentUser.uid && (
+              <button onClick={deleteMeet} style={{ marginLeft: "10px" }}>
+                약속 삭제
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -1,10 +1,10 @@
-import React, { useState, useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import style from "./EditProfile.module.css";
 import { authService, dbService } from "fbase";
 import OtherUserProfile from "./OtherUserProfile";
 
 function HomeModal({ onClose, item }) {
-  //console.log(item);
+  console.log(item);
   const [isOtherUserProfileOpen, setIsOtherUserProfileOpen] = useState(false);
   const [otherUserId, setOtherUserId] = useState("");
 
@@ -21,7 +21,10 @@ function HomeModal({ onClose, item }) {
           if (!currentMembers.includes(authService.currentUser.displayName)) {
             docRef
               .update({
-                member: [...currentMembers, authService.currentUser.displayName],
+                member: [
+                  ...currentMembers,
+                  authService.currentUser.displayName,
+                ],
               })
               .then(() => {
                 console.log("멤버 추가 성공");
@@ -65,7 +68,11 @@ function HomeModal({ onClose, item }) {
                     alert("존재하지 않는 유저입니다."); //데이터베이스 meet_info에 sendUserid가 없을 경우
                   }
                 }}
-                style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+                style={{
+                  color: "blue",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
               >
                 {item.sendUser}
               </span>
@@ -86,7 +93,10 @@ function HomeModal({ onClose, item }) {
         </div>
       </div>
       {isOtherUserProfileOpen && (
-        <OtherUserProfile userId={otherUserId} onClose={() => setIsOtherUserProfileOpen(false)} />
+        <OtherUserProfile
+          userId={otherUserId}
+          onClose={() => setIsOtherUserProfileOpen(false)}
+        />
       )}
     </div>
   );

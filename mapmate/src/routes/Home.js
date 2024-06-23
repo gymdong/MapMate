@@ -19,7 +19,14 @@ const Home = () => {
     isLoading: true,
     ispanto: false,
   });
+  const getFormattedDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1 필요
+    const day = String(today.getDate()).padStart(2, "0");
 
+    return `${year}-${month}-${day}`;
+  };
   const clickMarker = (item) => {
     setSelectedItem(item);
     console.log(selectedItem);
@@ -97,28 +104,39 @@ const Home = () => {
           </div>
         </MapMarker>
         {meets.length > 1 &&
-          meets.map((item, idx) => (
-            <MapMarker
-              position={{
-                // 인포윈도우가 표시될 위치입니다
-                lat: item.lat,
-                lng: item.lng,
-              }}
-              clickable={true}
-              onClick={() => {
-                clickMarker(item);
-              }}
-            >
-              <div
-                style={{
-                  padding: "5px",
-                  color: "#000",
-                }}
-              >
-                {item.sendMessage}
-              </div>
-            </MapMarker>
-          ))}
+          meets.map((item, idx) => {
+            const meetDate = item.date;
+            const todayDate = getFormattedDate();
+            const meetDateObj = new Date(meetDate);
+            const todayDateobj = new Date(todayDate);
+
+            if (meetDateObj.getTime() >= todayDateobj.getTime()) {
+              return (
+                <MapMarker
+                  position={{
+                    // 인포윈도우가 표시될 위치입니다
+                    lat: item.lat,
+                    lng: item.lng,
+                  }}
+                  clickable={true}
+                  onClick={() => {
+                    clickMarker(item);
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "5px",
+                      color: "#000",
+                    }}
+                  >
+                    {item.sendMessage}
+                  </div>
+                </MapMarker>
+              );
+            } else {
+              return <></>;
+            }
+          })}
       </Map>
       {isHomeModalOpen && (
         <HomeModal onClose={handleCloseHomeModal} item={selectedItem} />

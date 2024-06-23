@@ -1,12 +1,11 @@
-.menuContainer {
-  border: 1px solid black;
-}
 .menuView {
   width: 80%;
   padding: 20px;
   border-radius: 100px;
   transition: background-color 0.4s;
   display: flex;
+  margin: 15px 0px;
+  cursor: pointer;
 }
 .menuView:hover {
   background-color: #d9eb3b;
@@ -14,7 +13,7 @@
 /* 기본 span 스타일 */
 .menuText {
   font-family: "Arial", sans-serif; /* 원하는 폰트 패밀리 */
-  font-size: 22px; /* 폰트 크기 */
+  font-size: 27px; /* 폰트 크기 */
   color: #333; /* 텍스트 색상 */
   /* 기타 스타일 */
 }
@@ -23,6 +22,7 @@
 .menuLinkBox {
   text-decoration: none; /* 밑줄 제거 */
   color: inherit; /* 텍스트 색상 상속 */
+  padding-top: 5px;
 }
 
 /* 방문한 링크의 스타일 변경 방지 */

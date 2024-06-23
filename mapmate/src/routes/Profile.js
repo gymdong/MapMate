@@ -73,6 +73,7 @@ const Profile = ({ userData }) => {
 
   const handleCloseEditProfile = () => {
     setIsEditProfileOpen(false);
+    // window.location.reload();
   };
   const navigate = useNavigate();
 

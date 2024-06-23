@@ -42,6 +42,8 @@ function EditProfile({ onClose, changedUser }) {
             })
             .then(() => {
               console.log("프로필 사진 업데이트 성공");
+              changedUser(bio);
+              onClose();
             })
             .catch((error) => {
               console.error("프로필 사진 업데이트 오류:", error);
@@ -51,9 +53,8 @@ function EditProfile({ onClose, changedUser }) {
       .catch((error) => {
         console.error("Error getting documents: ", error);
       });
-    console.log(response);
-    changedUser(bio);
-    onClose();
+    //console.log(response);
+
     // window.location.reload("/profile");
   };
   const handleAvatarChange = async (event) => {
@@ -86,14 +87,19 @@ function EditProfile({ onClose, changedUser }) {
             {avatar ? (
               <img className={style.profile_avatar} src={avatar} alt="Avatar" />
             ) : (
-              <p>사진을 선택해주세요.</p>
+              <p className={style.profile_avatar_text}>사진을 선택해주세요.</p>
             )}
-            <input
-              type="file"
-              onChange={handleAvatarChange}
-              accept="image/*"
-              required
-            />
+            <div className={style.inputBox}>
+              <label>
+                Upload Image
+                <input
+                  type="file"
+                  onChange={handleAvatarChange}
+                  accept="image/*"
+                  required
+                />
+              </label>
+            </div>
           </div>
           <div className={style.bio_section}>
             <textarea

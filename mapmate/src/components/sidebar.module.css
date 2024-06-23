@@ -56,8 +56,9 @@
 }
 .log_out_button {
   padding: 10px 20px;
-  font-family: "Arial", sans-serif; /* 원하는 폰트 패밀리 */
-  font-size: 15px; /* 폰트 크기 */
+  font-family: "Playwrite DE Grund", cursive;
+  font-size: 12px; /* 폰트 크기 */
+  font-weight: bold;
   color: #333; /* 텍스트 색상 */
   background-color: #cccccc; /* Twitter-like blue */
   border: none;

@@ -13,7 +13,8 @@ import Alert from "routes/Alert";
 import CalendarView from "routes/Calendar";
 import { dbService } from "fbase";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
-
+import { CSSTransition, SwitchTransition } from "react-transition-group";
+import { useLocation } from "react-router-dom";
 const { kakao } = window;
 function App() {
   console.log(authService.currentUser);
@@ -32,6 +33,7 @@ function App() {
   const handleCloseOverlay = () => {
     setIsOverlayOpen(false);
   };
+  const location = useLocation();
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       console.log(user);
@@ -123,40 +125,55 @@ function App() {
           </div>
         </div>
       )}
-      <BrowserRouter>
-        <div id="container">
-          <Routes>
-            {isLoggedIn ? (
-              <>
-                <Route exact path="/" element={<Home />}></Route>
-                <Route exact path="/friend" element={<Friend />}></Route>
-                <Route exact path="/alert" element={<Alert />}></Route>
-                <Route
-                  exact
-                  path="/profile"
-                  element={<Profile userData={userData} />}
-                ></Route>
-                <Route
-                  exact
-                  path="/calendar"
-                  element={<CalendarView />}
-                ></Route>
-              </>
-            ) : (
-              <Route exact path="/" element={<></>}></Route>
-            )}
-          </Routes>
-          {isLoggedIn ? <></> : <Auth onDataChange={handleUserData} />}
-        </div>
-        <Sidebar width={320}>
-          {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
-          <div className={style.buttonContainer}>
+      <div id="container">
+        <SwitchTransition>
+          <CSSTransition
+            key={location.pathname} // 경로를 키로 사용
+            classNames={{
+              enter: style.fadeEnter,
+              enterActive: style.fadeEnterActive,
+              exit: style.fadeExit,
+              exitActive: style.fadeExitActive,
+            }}
+            timeout={300}
+          >
+            <Routes location={location}>
+              {isLoggedIn ? (
+                <>
+                  <Route exact path="/" element={<Home />}></Route>
+                  <Route exact path="/friend" element={<Friend />}></Route>
+                  <Route exact path="/alert" element={<Alert />}></Route>
+                  <Route
+                    exact
+                    path="/profile"
+                    element={<Profile userData={userData} />}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/calendar"
+                    element={<CalendarView />}
+                  ></Route>
+                </>
+              ) : (
+                <Route exact path="/" element={<></>}></Route>
+              )}
+            </Routes>
+          </CSSTransition>
+        </SwitchTransition>
+        {isLoggedIn ? <></> : <Auth onDataChange={handleUserData} />}
+      </div>
+      <Sidebar width={320} isLoggedIn={isLoggedIn}>
+        {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
+        <div className={style.buttonContainer}>
+          {isLoggedIn ? (
             <button onClick={handleOpenOverlay} className={style.submit_btn}>
               Create New Meeting
             </button>
-          </div>
-        </Sidebar>
-      </BrowserRouter>
+          ) : (
+            <></>
+          )}
+        </div>
+      </Sidebar>
     </div>
   );
 }

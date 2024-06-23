@@ -9,6 +9,8 @@ const Home = () => {
   const [meets, setMeets] = useState([]);
   const [isHomeModalOpen, setIsHomeModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
+  const [userLat, setUserLat] = useState(33.5563);
+  const [userLng, setUserLng] = useState(126.79581);
 
   const clickMarker = (item) => {
     setSelectedItem(item);
@@ -25,6 +27,22 @@ const Home = () => {
     });
     console.log(meets);
   }, []);
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      getPosSuccess,
+      () => alert("위치 정보를 가져오는데 실패했습니다."),
+      {
+        enableHighAccuracy: true,
+        maximumAge: 30000,
+        timeout: 27000,
+      }
+    );
+  }, []);
+  const getPosSuccess = (pos) => {
+    // 현재 위치(위도, 경도) 가져온다.
+    setUserLat(pos.coords.latitude);
+    setUserLng(pos.coords.longitude);
+  };
   const handleCloseHomeModal = () => {
     setIsHomeModalOpen(false);
   };
@@ -42,9 +60,26 @@ const Home = () => {
   return (
     <div style={{ width: "95vw", height: "95vh" }}>
       <Map
-        center={{ lat: 33.5563, lng: 126.79581 }}
+        center={{ lat: userLat, lng: userLng }}
         style={{ width: "100%", height: "100%" }}
       >
+        <MapMarker
+          position={{
+            // 인포윈도우가 표시될 위치입니다
+            lat: userLat,
+            lng: userLng,
+          }}
+          clickable={true}
+        >
+          <div
+            style={{
+              padding: "5px",
+              color: "#000",
+            }}
+          >
+            내 위치
+          </div>
+        </MapMarker>
         {meets.length > 1 &&
           meets.map((item, idx) => (
             <MapMarker

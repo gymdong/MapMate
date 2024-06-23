@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import {
   FaHome,
-  FaComment,
+  FaBell,
   FaUserFriends,
   FaUserAlt,
   FaCalendarCheck,
@@ -22,11 +22,11 @@ const Navigation = () => {
           </Link>
         </div>
         <div className={styles.menuView}>
-          <FaComment
+          <FaBell
             style={{ fontSize: "33px", marginRight: "10px", marginTop: "10px" }}
           />{" "}
           <Link to="/alert" className={styles.menuLinkBox}>
-            <span className={styles.menuText}>Alert</span>
+            <span className={styles.menuText}>Notifications</span>
           </Link>
         </div>
         <div className={styles.menuView}>

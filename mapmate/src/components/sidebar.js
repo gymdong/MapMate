@@ -3,7 +3,7 @@ import styles from "./sidebar.module.css";
 import { authService } from "fbase";
 import { useNavigate } from "react-router-dom";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
-const Sidebar = ({ width = 280, children }) => {
+const Sidebar = ({ width = 280, children, isLoggedIn }) => {
   const [isOpen, setOpen] = useState(false);
   const [xPosition, setX] = useState(width);
   const side = useRef();
@@ -73,9 +73,13 @@ const Sidebar = ({ width = 280, children }) => {
         </div>
         {children}
         <div className={styles.buttonContainer}>
-          <button onClick={onLogOutClick} className={styles.log_out_button}>
-            Log Out
-          </button>
+          {isLoggedIn ? (
+            <button onClick={onLogOutClick} className={styles.log_out_button}>
+              Log Out
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

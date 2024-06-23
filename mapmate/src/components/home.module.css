@@ -114,3 +114,20 @@ textarea {
   font-size: 25px; /* 폰트 크기 */
   font-weight: bold;
 }
+.fadeEnter {
+  opacity: 0;
+  transition: opacity 100ms ease-in;
+}
+
+.fadeEnterActive {
+  opacity: 1;
+}
+
+.fadeExit {
+  opacity: 1;
+  transition: opacity 100ms ease-in;
+}
+
+.fadeExitActive {
+  opacity: 0;
+}

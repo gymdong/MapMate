@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import style from "./EditProfile.module.css";
 
-function CalendarModal({ onClose, meet }) {
+function CalendarModal({ onClose, meet, selectedDate }) {
   console.log(meet);
   const [addresses, setAddresses] = useState([]);
 
@@ -52,22 +52,36 @@ function CalendarModal({ onClose, meet }) {
         </button>
         <h2>약속 정보</h2>
         <div className={style.edit_profile_content}>
-          {meet.map((val, idx) => {
-            const encodedMarkerName = encodeURIComponent(val.sendMessage);
-            const mapLink = `https://map.kakao.com/link/map/${encodedMarkerName},${val.lat},${val.lng}`;
-            return (
-              <div>
-                <a href={mapLink} target="_blank" rel="noopener noreferrer">
-                  카카오맵에서 위치 확인하기
-                </a>
-                <p>날짜: {val.date}</p>
-                <p>시간: {val.time}</p>
-                <p></p>
-                {/* 여기 주소값으로 수정해야함 */}
-                <p>정보: {val.sendMessage}</p>
-              </div>
-            );
-          })}
+          {meet.length > 0 ? (
+            meet.map((val, idx) => {
+              const encodedMarkerName = encodeURIComponent(val.sendMessage);
+              const mapLink = `https://map.kakao.com/link/map/${encodedMarkerName},${val.lat},${val.lng}`;
+              return (
+                <div>
+                  <a href={mapLink} target="_blank" rel="noopener noreferrer">
+                    카카오맵에서 위치 확인하기
+                  </a>
+                  <p>날짜: {val.date}</p>
+                  <p>시간: {val.time}</p>
+                  <p></p>
+                  {/* 여기 주소값으로 수정해야함 */}
+                  <p>내용: {val.sendMessage}</p>
+                  <p>
+                    인원:{" "}
+                    {val.member?.map((mem, idx) => (
+                      <span key={idx}>
+                        {idx === val.member.length - 1 ? mem : mem + ", "}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              );
+            })
+          ) : (
+            <p>
+              {selectedDate + " "}에는 약속이 없는 것 같군요! 과제나 할까요?
+            </p>
+          )}
         </div>
       </div>
     </div>

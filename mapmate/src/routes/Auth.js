@@ -1,6 +1,7 @@
 import { authService, dbService, firebaseInstance } from "fbase";
 import { useState } from "react";
 import bannerImage from "./banner.png";
+import kakaoImage from "./kakaomap.png";
 import "./Auth.css"; // CSS 파일 임포트
 
 const Auth = ({ onDataChange }) => {
@@ -72,11 +73,23 @@ const Auth = ({ onDataChange }) => {
     console.log(data.user);
   };
   return (
-    <div>
+    <div className="container">
+      <div className="header-text-container">
+        <div>
+          <p className="header-text">MapMate</p>
+          <p className="header-text-sub">마음 맞는 이들과의 일정 조율 서비스</p>
+        </div>
+        <img
+          src={kakaoImage}
+          style={{ width: "200px", height: "65px" }}
+          alt="카카오"
+        ></img>
+      </div>
+
       <div className="image-container">
         <img
           src={bannerImage}
-          style={{ width: "98vw", height: "98vh" }}
+          style={{ width: "65vw", height: "65vh" }}
           alt="배너"
           className="banner"
         ></img>
@@ -89,12 +102,12 @@ const Auth = ({ onDataChange }) => {
               justifyContent: "space-around",
             }}
           >
-            <button onClick={onSocialClick} name="google">
-              구글로 시작하기!
-            </button>
-
-            <button onClick={onSocialClick} name="Kakao">
-              카카오로 시작하기!
+            <button
+              onClick={onSocialClick}
+              name="google"
+              className="sign-button"
+            >
+              Start With Google
             </button>
           </div>
         </div>

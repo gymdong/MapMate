@@ -32,20 +32,29 @@ const Alert = ({ onNotificationChecked }) => {
           });
 
           Promise.all(followNotifications).then((resolvedFollowNotifications) => {
-            setNotifications((prev) => [...prev, ...resolvedFollowNotifications]);
+            setNotifications((prev) => [
+              ...prev.filter((notif) => notif.type !== "follow"), //타입 검사하여 follow인지 meet_info에서 가져온건지 검사하여 중복방지
+              ...resolvedFollowNotifications
+            ]);
           });
         });
 
       // notifications 리스너
-      const unsubscribeNotifications = dbService.collection("notifications").where("userId", "==", currentUser.email).onSnapshot((snapshot) => {
-        const meetNotifications = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          type: "meet_info",
-          ...doc.data(),
-        }));
+      const unsubscribeNotifications = dbService
+        .collection("notifications")
+        .where("userId", "==", currentUser.email)
+        .onSnapshot((snapshot) => {
+          const meetNotifications = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            type: "meet_info",
+            ...doc.data(),
+          }));
 
-        setNotifications((prev) => [...prev, ...meetNotifications]);
-      });
+          setNotifications((prev) => [
+            ...prev.filter((notif) => notif.type !== "meet_info"),
+            ...meetNotifications
+          ]);
+        });
 
       // 컴포넌트 언마운트 시 리스너 해제
       return () => {
@@ -64,7 +73,7 @@ const Alert = ({ onNotificationChecked }) => {
       await dbService.collection("notifications").doc(id).delete();
     }
 
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+    setNotifications((prev) => prev.filter((notification) => notification.id !== id)); //확인 버튼 눌렀을때 해당 알림의 id로 필터링하여 알림 삭제
 
     if (onNotificationChecked) {
       onNotificationChecked(); // 알림 확인 시 콜백 호출
@@ -86,7 +95,7 @@ const Alert = ({ onNotificationChecked }) => {
             {notification.type === "follow" ? (
               <p>{`${notification.senderName}님이 팔로우했습니다.`}</p>
             ) : (
-              <p>{`${truncateMessage(notification.message, 50)}`}</p>
+              <p>{truncateMessage(notification.message, 50)}</p>
             )}
             <button
               className={styles.checkButton}

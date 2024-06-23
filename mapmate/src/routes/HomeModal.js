@@ -24,22 +24,31 @@ function HomeModal({ onClose, item }) {
     }
     return message;
   };
-
+  
   const notifyMembers = async (message, excludeSelf = true) => {
     const memberNotifications = members.map(async (member) => {
       const userQuery = await dbService.collection("user_info").where("user_name", "==", member).get();
       const userData = userQuery.docs[0]?.data();
-
-      if (userData && (!excludeSelf || userData.user_email !== currentUser.email)) { //수정하거나 삭제한 본인의 email은 notifications에 저장안되게
-        await dbService.collection("notifications").add({
-          userId: userData.user_email,
-          message: message,
-          isChecked: false,
-          timestamp: new Date(),
-        });
+  
+      if (userData && (!excludeSelf || userData.user_email !== currentUser.email)) {
+        // 이미 해당 유저에게 같은 메시지가 있는지 확인
+        const existingNotificationQuery = await dbService.collection("notifications")
+          .where("userId", "==", userData.user_email)
+          .where("message", "==", message)
+          .get();
+  
+        if (existingNotificationQuery.empty) {
+          // 중복 알림이 없으면 알림 추가
+          await dbService.collection("notifications").add({
+            userId: userData.user_email,
+            message: message,
+            isChecked: false,
+            timestamp: new Date(),
+          });
+        }
       }
     });
-
+  
     await Promise.all(memberNotifications);
   };
 

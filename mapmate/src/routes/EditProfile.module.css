@@ -52,7 +52,40 @@
   border: 4px solid white;
   margin-bottom: 10px;
 }
+.profile_avatar_text {
+  padding-bottom: 15px;
+}
+.inputBox {
+  display: inline-block;
+  position: relative;
+}
 
+.inputBox input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+}
+
+.inputBox label {
+  display: block;
+  padding: 10px 15px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.inputBox label:hover {
+  background-color: #e0e0e0;
+}
 .bio_section {
   display: flex;
   flex-direction: column;

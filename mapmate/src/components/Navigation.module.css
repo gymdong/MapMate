@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+Deutschland+Grundschrift:wght@400&display=swap");
+
 .menuView {
   width: 80%;
   padding: 20px;
@@ -9,8 +11,9 @@
 }
 /* 기본 span 스타일 */
 .menuText {
-  font-family: "Arial", sans-serif; /* 원하는 폰트 패밀리 */
-  font-size: 27px; /* 폰트 크기 */
+  font-family: "Playwrite DE Grund", cursive;
+  font-size: 24px; /* 폰트 크기 */
+
   color: #333; /* 텍스트 색상 */
   /* 기타 스타일 */
 }

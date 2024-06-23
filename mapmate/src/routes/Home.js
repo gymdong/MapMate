@@ -194,7 +194,7 @@ const Home = ({ handleCurrentLL }) => {
                         color: "#000",
                       }}
                     >
-                      {item.sendMessage.substring(0, 8) + "..."}
+                      <span>{item.sendMessage.substring(0, 7) + "..."}</span>
                     </div>
                   </MapMarker>
                 );

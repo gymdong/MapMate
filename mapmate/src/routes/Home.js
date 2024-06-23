@@ -5,12 +5,20 @@ import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 import { Link } from "react-router-dom";
 import HomeModal from "./HomeModal";
 const { kakao } = window;
+
 const Home = () => {
   const [meets, setMeets] = useState([]);
   const [isHomeModalOpen, setIsHomeModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
-  const [userLat, setUserLat] = useState(33.5563);
-  const [userLng, setUserLng] = useState(126.79581);
+  const [state, setState] = useState({
+    center: {
+      lat: 33.450701,
+      lng: 126.570667,
+    },
+    errMsg: null,
+    isLoading: true,
+    ispanto: false,
+  });
 
   const clickMarker = (item) => {
     setSelectedItem(item);
@@ -27,22 +35,40 @@ const Home = () => {
     });
     console.log(meets);
   }, []);
+
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      getPosSuccess,
-      () => alert("위치 정보를 가져오는데 실패했습니다."),
-      {
-        enableHighAccuracy: true,
-        maximumAge: 30000,
-        timeout: 27000,
-      }
-    );
+    if (navigator.geolocation) {
+      // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setState((prev) => ({
+            ...prev,
+            center: {
+              lat: position.coords.latitude, // 위도
+              lng: position.coords.longitude, // 경도
+            },
+            isLoading: false,
+          }));
+        },
+        (err) => {
+          setState((prev) => ({
+            ...prev,
+            errMsg: err.message,
+            isLoading: false,
+          }));
+        }
+      );
+    } else {
+      // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+      setState((prev) => ({
+        ...prev,
+        errMsg: "geolocation을 사용할수 없어요..",
+        isLoading: false,
+      }));
+    }
+    console.log(state);
   }, []);
-  const getPosSuccess = (pos) => {
-    // 현재 위치(위도, 경도) 가져온다.
-    setUserLat(pos.coords.latitude);
-    setUserLng(pos.coords.longitude);
-  };
+
   const handleCloseHomeModal = () => {
     setIsHomeModalOpen(false);
   };
@@ -58,26 +84,16 @@ const Home = () => {
   <div id="map" style={{ width: 300, height: 200 }}></div>*/
   }
   return (
-    <div style={{ width: "95vw", height: "95vh" }}>
+    <div style={{ width: "85vw", height: "85vh" }}>
       <Map
-        center={{ lat: userLat, lng: userLng }}
+        center={state.center}
         style={{ width: "100%", height: "100%" }}
+        ispanto={state.ispanto}
+        level={6}
       >
-        <MapMarker
-          position={{
-            // 인포윈도우가 표시될 위치입니다
-            lat: userLat,
-            lng: userLng,
-          }}
-          clickable={true}
-        >
-          <div
-            style={{
-              padding: "5px",
-              color: "#000",
-            }}
-          >
-            내 위치
+        <MapMarker position={state.center}>
+          <div style={{ padding: "5px", color: "#000" }}>
+            {state.errMsg ? state.errMsg : "여기에 계신가요?!"}
           </div>
         </MapMarker>
         {meets.length > 1 &&

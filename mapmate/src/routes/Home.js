@@ -100,7 +100,6 @@ const Home = ({ handleCurrentLL }) => {
           }));
         }
       );
-      handleCurrentLL(state);
     } else {
       // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
       setState((prev) => ({
@@ -112,6 +111,7 @@ const Home = ({ handleCurrentLL }) => {
     console.log(state);
   }, []);
   useEffect(() => {
+    handleCurrentLL(state);
     console.log(state);
   }, [state]);
   const handleCloseHomeModal = () => {
@@ -130,7 +130,7 @@ const Home = ({ handleCurrentLL }) => {
   <div id="map" style={{ width: 300, height: 200 }}></div>*/
   }
   return (
-    <div style={{ width: "85vw", height: "85vh" }}>
+    <div style={{ width: "100vw", height: "100vh" }}>
       {isMountFinished && (
         <Map
           center={{ lat: state.center.lat, lng: state.center.lng }}

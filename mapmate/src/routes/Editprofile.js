@@ -6,7 +6,7 @@ import { authService } from "fbase";
 import { dbService } from "fbase";
 
 function EditProfile({ onClose, changedUser }) {
-  const [bio, setBio] = useState("This is a short bio.");
+  const [bio, setBio] = useState("간략한 자기소개를 적어주세요!");
   const [avatar, setAvatar] = useState("");
 
   const handleBioChange = (event) => {

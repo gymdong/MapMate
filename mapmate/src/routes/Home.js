@@ -11,9 +11,9 @@ const Home = ({ handleCurrentLL }) => {
   const [isHomeModalOpen, setIsHomeModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
   const [isMountFinished, setIsMountFinished] = useState(false);
-  const [setRetVal, setSetRetVal] = useState(true);
   const [conditionResults, setConditionResults] = useState([]); // 조건 결과 저장
   const [state, setState] = useState({
+    //초기값은 제주도
     center: {
       lat: 33.45058,
       lng: 126.574942,
@@ -24,6 +24,7 @@ const Home = ({ handleCurrentLL }) => {
   });
 
   const getFormattedDate = () => {
+    //날짜 포매팅 함수
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1 필요
@@ -32,11 +33,13 @@ const Home = ({ handleCurrentLL }) => {
     return `${year}-${month}-${day}`;
   };
   const clickMarker = (item) => {
+    //해당 위치 약속 정보를 띄울 함수
     setSelectedItem(item);
     console.log(selectedItem);
     setIsHomeModalOpen(true);
   };
   const checkFollowingStatus = async (data) => {
+    //팔로잉 하고 있는 대상의 약속인지 검사
     if (!data) {
       console.error("error occured");
       return await Promise.resolve(false);
@@ -57,6 +60,7 @@ const Home = ({ handleCurrentLL }) => {
     }
 
     if (currentUser) {
+      //검사 완료 후 Promise.resolve로 반환
       console.log(uEmail);
       const followQuery = await dbService
         .collection("follow_info")
@@ -76,16 +80,16 @@ const Home = ({ handleCurrentLL }) => {
   useEffect(() => {
     dbService.collection("meet_info").onSnapshot((snapshot) => {
       const newArray = snapshot.docs.map((document) => ({
-        mid: document.id,
+        mid: document.id, //각 약속의 고유 ID 받아오는 부분
         ...document.data(),
       }));
       setMeets(newArray);
     });
-    //console.log(meets);
     setIsMountFinished(true);
   }, []);
   useEffect(() => {
     const checkAllConditions = async () => {
+      //약속마다 팔로잉 여부가 저장된 배열
       const results = await Promise.all(
         meets.map(async (val) => {
           if (val !== undefined && val !== null) {
@@ -103,7 +107,7 @@ const Home = ({ handleCurrentLL }) => {
   }, [meets]);
   useEffect(() => {
     if (navigator.geolocation) {
-      // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+      // GeoLocation을 이용해서 접속 위치를 얻어옴
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setState((prev) => ({
@@ -124,7 +128,7 @@ const Home = ({ handleCurrentLL }) => {
         }
       );
     } else {
-      // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+      //  GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정
       setState((prev) => ({
         ...prev,
         errMsg: "geolocation을 사용할수 없어요..",
@@ -144,13 +148,13 @@ const Home = ({ handleCurrentLL }) => {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       {isMountFinished && (
-        <Map
+        <Map //메인 지도 생성. 중심은 현위치
           center={{ lat: state.center.lat, lng: state.center.lng }}
           style={{ width: "100%", height: "100%" }}
           ispanto={state.ispanto}
           level={6}
         >
-          <MapMarker
+          <MapMarker //현 위치를 보여주는 마커
             position={state.center}
             infoWindowOptions={{ disableAutoPan: true }}
           >
@@ -160,25 +164,21 @@ const Home = ({ handleCurrentLL }) => {
           </MapMarker>
           {meets.length > 1 &&
             meets.map((item, idx) => {
+              //각각의 약속을 마커+인포윈도우로 띄우는 뷰
               const meetDate = item.date;
               const todayDate = getFormattedDate();
               const meetDateObj = new Date(meetDate);
               const todayDateobj = new Date(todayDate);
-              // let fs;
-              // checkFollowingStatus(item).then((followstatus) => {
-              //   fs = followstatus;
-              // });
 
               if (
                 meetDateObj.getTime() >= todayDateobj.getTime() &&
                 (conditionResults[idx] ||
                   item.sendUserid == authService.currentUser.uid)
               ) {
-                //여기 조건 수정
                 return (
                   <MapMarker
                     position={{
-                      // 인포윈도우가 표시될 위치입니다
+                      // 인포윈도우가 표시될 위치
                       lat: item.lat,
                       lng: item.lng,
                     }}

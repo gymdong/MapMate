@@ -41,6 +41,7 @@ const Auth = ({ onDataChange }) => {
   };
   const toggleAccount = () => setNewAccount((prev) => !prev);
   const onSocialClick = async (event) => {
+    //구글 로그인 처리 함수
     const {
       target: { name },
     } = event;
@@ -58,6 +59,7 @@ const Auth = ({ onDataChange }) => {
     if (snapshot.empty) {
       // 해당 이메일이 데이터베이스에 없을 경우에만 추가
       await dbService.collection("user_info").add({
+        //프로필 사진과 바이오는 디폴트 값을 줌
         user_email: user.email,
         user_id: user.uid,
         user_name: user.displayName,
@@ -69,11 +71,6 @@ const Auth = ({ onDataChange }) => {
     } else {
       console.log("이미 존재하는 이메일입니다.");
     }
-    // await dbService.collection("user_info").add({
-    //   user_email: data.user.email,
-    //   user_id: data.user.uid,
-    //   user_name: data.user.displayName,
-    // });
     onDataChange(data.user);
     console.log(data.user);
   };
@@ -99,7 +96,6 @@ const Auth = ({ onDataChange }) => {
           className="banner"
         ></img>
         <div className="box">
-          {/* 여기에 박스 내용 추가 */}
           <div
             style={{
               display: "flex",

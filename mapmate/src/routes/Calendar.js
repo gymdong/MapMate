@@ -6,6 +6,7 @@ import { dbService, authService } from "fbase";
 import CalendarModal from "./CalendarModal";
 
 function CalendarView() {
+  //약속을 캘린더에 나타내게 하는 뷰
   const [value, setValue] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [meetList, setMeetList] = useState([]);
@@ -21,7 +22,7 @@ function CalendarView() {
     } else {
       // currentUser가 null인 경우 처리
       console.log("User is not logged in");
-      data = null; // 혹은 다른 적절한 초기화 작업
+      data = null;
     }
     if (authService.currentUser) {
       const querySnapshot = await data.get();
@@ -55,7 +56,7 @@ function CalendarView() {
     } else {
       // currentUser가 null인 경우 처리
       console.log("User is not logged in");
-      data = null; // 혹은 다른 적절한 초기화 작업
+      data = null;
     }
   };
 
@@ -85,7 +86,7 @@ function CalendarView() {
       return appointment ? <div className="appointment">★</div> : null;
     } //약속이 있는 날엔 별표
   };
-
+  //캘린더 라이브러리 사용
   return (
     <div className="calendar-container">
       <Calendar
@@ -96,7 +97,7 @@ function CalendarView() {
         onClickDay={handleDateClick}
       />
       {isCalendarModalOpen && (
-        <CalendarModal
+        <CalendarModal //캘린더 날짜 클릭시 해당 날짜의 약속을 띄움
           onClose={handleCloseCalendarModal}
           meet={selectedMeet}
           selectedDate={selectedDate}

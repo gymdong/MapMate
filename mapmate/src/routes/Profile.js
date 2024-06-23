@@ -19,6 +19,7 @@ const Profile = ({ userData }) => {
     return `${year}-${month}-${day}`;
   };
   const getMeetInfo = async () => {
+    //약속 정보들을 받아오는 부분
     if (authService.currentUser) {
       setUserName(authService.currentUser.displayName);
       const data = dbService
@@ -89,7 +90,7 @@ const Profile = ({ userData }) => {
         <div className={style.profile_info}>
           <img
             className={style.profile_avatar}
-            src={userProfile}
+            src={userProfile} //실시간으로 업데이트
             alt="Avatar"
           />
           <div className={style.profile_details}>
@@ -109,7 +110,7 @@ const Profile = ({ userData }) => {
       </div>
       <div className={style.profile_meets}>
         <h2>내가 만든 약속들</h2>
-        {/* 트윗 목록 */}
+        {/* 약속 목록 */}
         {meetList.map((val, idx) => {
           const meetDate = val.date;
           const todayDate = getFormattedDate();

@@ -19,6 +19,7 @@ function HomeModal({ onClose, item }) {
   const currentUser = authService.currentUser;
 
   const truncateMessage = (message, maxLength) => {
+    //메시지 요약 함수
     if (message.length > maxLength) {
       return message.substring(0, maxLength) + "...";
     }
@@ -60,6 +61,7 @@ function HomeModal({ onClose, item }) {
   };
 
   const joinToMeet = async () => {
+    //약속 참여
     const docRef = await dbService.collection("meet_info").doc(item.mid);
     docRef
       .get()
@@ -127,6 +129,7 @@ function HomeModal({ onClose, item }) {
   };
 
   const editMeet = async (event) => {
+    //약속 수정
     event.preventDefault();
     const docRef = dbService.collection("meet_info").doc(item.mid);
     const doc = await docRef.get();
@@ -165,7 +168,7 @@ function HomeModal({ onClose, item }) {
       console.error("문서를 찾을 수 없습니다.");
     }
   };
-
+  //모달과 유사한 뷰. 우선 하드코딩
   const encodedMarkerName = encodeURIComponent(item.sendMessage);
   const mapLink = `https://map.kakao.com/link/map/${encodedMarkerName},${item.lat},${item.lng}`;
 

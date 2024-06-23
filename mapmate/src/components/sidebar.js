@@ -4,6 +4,7 @@ import { authService } from "fbase";
 import { useNavigate } from "react-router-dom";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 const Sidebar = ({ width = 280, children, isLoggedIn }) => {
+  //사이드바. 메뉴로 이동을 담당할 것
   const [isOpen, setOpen] = useState(false);
   const [xPosition, setX] = useState(width);
   const side = useRef();
@@ -77,7 +78,7 @@ const Sidebar = ({ width = 280, children, isLoggedIn }) => {
         </div>
         {children}
         <div className={styles.buttonContainer}>
-          {isLoggedIn ? (
+          {isLoggedIn ? ( //로그아웃하는 버튼
             <button onClick={onLogOutClick} className={styles.log_out_button}>
               Log Out
             </button>

@@ -20,13 +20,14 @@ import InfoMenu from "./infoMenu";
 const { kakao } = window;
 function App() {
   console.log(authService.currentUser);
-  const [init, setInit] = useState(false);
-  const [isLoggedIn, setisLoggedIn] = useState(false);
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-  const [userData, setUserData] = useState({});
-  const [selectLat, setSelectLat] = useState(0);
+  const [init, setInit] = useState(false); //초기화 되고 나서 렌더링 하기 위해
+  const [isLoggedIn, setisLoggedIn] = useState(false); //로그인여부 확인
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false); // 모달창
+  const [userData, setUserData] = useState({}); //내 정보, 코드 리팩토링시 이 값을 하위 컴포넌트로 전달하게 변경
+  const [selectLat, setSelectLat] = useState(0); //선택한 위도, 경도값
   const [selectLng, setSelectLng] = useState(0);
   const [currentLL, setCurrentLL] = useState({
+    //최근의 위도, 경도값, default는 제주도로 설정
     center: {
       lat: 33.45058,
       lng: 126.574942,
@@ -67,6 +68,7 @@ function App() {
     var meetTime = document.getElementById("meet_time").value;
 
     await dbService.collection("meet_info").add({
+      //DB에 약속을 추가하는 부분
       sendMessage: textareaContent,
       sendUser: authService.currentUser.displayName,
       sendUserid: authService.currentUser.uid,
@@ -79,18 +81,7 @@ function App() {
     console.log(authService.currentUser);
     handleCloseOverlay();
   };
-  /*useEffect(() => {
-    const container = document.getElementById("map");
-    const options = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3,
-    };
-    const map = new kakao.maps.Map(container, options);
-  }, []);*/
-  {
-    /*<p style={{ fontSize: 50, textAlign: "center" }}>Sample Page</p>
-        <div id="map" style={{ width: 500, height: 400 }}></div>*/
-  }
+
   return (
     <div
       style={{ width: "100%", minHeight: "100vh" }}
@@ -110,7 +101,7 @@ function App() {
               <Map
                 center={{
                   lat: currentLL.center.lat,
-                  lng: currentLL.center.lng,
+                  lng: currentLL.center.lng, //지도 중심은 현위치로 설정
                 }}
                 style={{ width: "460px", height: "300px" }}
                 onClick={(_, mouseEvent) => {
@@ -145,7 +136,7 @@ function App() {
       )}
       <div id="container">
         <SwitchTransition>
-          <CSSTransition
+          <CSSTransition //부드러운 화면 전환을 위한 태그들
             key={location.pathname} // 경로를 키로 사용
             classNames={{
               enter: style.fadeEnter,
@@ -156,7 +147,7 @@ function App() {
             timeout={300}
           >
             <Routes location={location}>
-              {isLoggedIn ? (
+              {isLoggedIn ? ( //Route를 이용해 화면 부드러운 전환
                 <>
                   <Route
                     exact
@@ -187,7 +178,7 @@ function App() {
       <Sidebar width={320} isLoggedIn={isLoggedIn}>
         {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
         <div className={style.buttonContainer}>
-          {isLoggedIn ? (
+          {isLoggedIn ? ( //약속 생성하는 부분
             <button onClick={handleOpenOverlay} className={style.submit_btn}>
               Create New Meeting
             </button>
@@ -199,6 +190,5 @@ function App() {
     </div>
   );
 }
-//<footer>&copy; {new Date().getFullYear()} MapMate</footer>
 
 export default App;

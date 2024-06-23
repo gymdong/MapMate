@@ -6,13 +6,14 @@ import { authService } from "fbase";
 import { dbService } from "fbase";
 
 function EditProfile({ onClose, changedUser }) {
-  const [bio, setBio] = useState("간략한 자기소개를 적어주세요!");
+  const [bio, setBio] = useState("간략한 자기소개를 적어주세요!"); //디폴트 바이오 변경값
   const [avatar, setAvatar] = useState("");
 
   const handleBioChange = (event) => {
     setBio(event.target.value);
   };
   const handleSubmitAvatar = async (event) => {
+    //프로필사진 변경시 DB에 저장하는 함수
     const attachmentRef = storageService
       .ref()
       .child(`${authService.currentUser.uid}/${uuidv4()}`);
@@ -58,6 +59,7 @@ function EditProfile({ onClose, changedUser }) {
     // window.location.reload("/profile");
   };
   const handleAvatarChange = async (event) => {
+    //미리보기를 위해
     const {
       target: { files },
     } = event;

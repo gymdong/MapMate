@@ -1,14 +1,13 @@
-import { Link } from "react-router-dom";
 import {
   FaHome,
   FaRegCommentDots,
   FaQuestionCircle,
   FaRegSmile,
-  FaCalendarCheck,
 } from "react-icons/fa"; // 예시로 Font Awesome 아이콘 사용
 import styles from "./infoMenu.module.css";
 
 const InfoMenu = () => {
+  //비로그인시 보여줄 뷰들
   const onDivClick = () => {
     alert("추후 지원 예정입니다!");
   };

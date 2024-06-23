@@ -9,6 +9,7 @@ import {
 import styles from "./Navigation.module.css";
 
 const Navigation = () => {
+  //로그인시 보여줄 뷰들. 실제로 Link로 이동하는 부분
   return (
     <nav>
       <div>

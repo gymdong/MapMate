@@ -3,6 +3,7 @@ import { authService, dbService } from "fbase";
 import styles from "./alert.module.css";
 
 const Alert = ({ onNotificationChecked }) => {
+  //전체적인 알림을 관리하는 뷰
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -31,12 +32,14 @@ const Alert = ({ onNotificationChecked }) => {
             };
           });
 
-          Promise.all(followNotifications).then((resolvedFollowNotifications) => {
-            setNotifications((prev) => [
-              ...prev.filter((notif) => notif.type !== "follow"), //타입 검사하여 follow인지 meet_info에서 가져온건지 검사하여 중복방지
-              ...resolvedFollowNotifications
-            ]);
-          });
+          Promise.all(followNotifications).then(
+            (resolvedFollowNotifications) => {
+              setNotifications((prev) => [
+                ...prev.filter((notif) => notif.type !== "follow"), //타입 검사하여 follow인지 meet_info에서 가져온건지 검사하여 중복방지
+                ...resolvedFollowNotifications,
+              ]);
+            }
+          );
         });
 
       // notifications 리스너
@@ -52,7 +55,7 @@ const Alert = ({ onNotificationChecked }) => {
 
           setNotifications((prev) => [
             ...prev.filter((notif) => notif.type !== "meet_info"),
-            ...meetNotifications
+            ...meetNotifications,
           ]);
         });
 
@@ -73,7 +76,9 @@ const Alert = ({ onNotificationChecked }) => {
       await dbService.collection("notifications").doc(id).delete();
     }
 
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id)); //확인 버튼 눌렀을때 해당 알림의 id로 필터링하여 알림 삭제
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id)
+    ); //확인 버튼 눌렀을때 해당 알림의 id로 필터링하여 알림 삭제
 
     if (onNotificationChecked) {
       onNotificationChecked(); // 알림 확인 시 콜백 호출
@@ -99,7 +104,9 @@ const Alert = ({ onNotificationChecked }) => {
             )}
             <button
               className={styles.checkButton}
-              onClick={() => handleCheckNotification(notification.id, notification.type)}
+              onClick={() =>
+                handleCheckNotification(notification.id, notification.type)
+              }
             >
               확인
             </button>

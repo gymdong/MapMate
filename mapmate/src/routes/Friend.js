@@ -3,6 +3,7 @@ import { authService, dbService } from "fbase";
 import style from "./friend.module.css";
 
 const Friend = () => {
+  //팔로우, 팔로잉 관리를 위한 뷰
   const [activeTab, setActiveTab] = useState("search");
   const [findUser, setFindUser] = useState("");
   const [userData, setUserData] = useState([]);
@@ -170,76 +171,75 @@ const Friend = () => {
 };
 
 const UserList = ({ data }) => {
-    const [isFollowing, setIsFollowing] = useState(false);
-  
-    useEffect(() => {
-      const checkFollowingStatus = async () => {
-        const currentUser = authService.currentUser;
-        if (currentUser) {
-          const followQuery = await dbService
-            .collection("follow_info")
-            .where("sender", "==", currentUser.email)
-            .where("receiver", "==", data.user_email)
-            .get();
-  
-          if (!followQuery.empty) {
-            setIsFollowing(true);
-          } else {
-            setIsFollowing(false); // 팔로우 상태를 명확히 설정
-          }
-        }
-      };
-  
-      checkFollowingStatus();
-    }, [data.user_email]); // data.user_email이 변경될 때마다 실행
-  
-    const handleFollow = async () => {
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    const checkFollowingStatus = async () => {
       const currentUser = authService.currentUser;
-      if (currentUser && !isFollowing) {
-        await dbService.collection("follow_info").add({
-          receiver: data.user_email,
-          sender: currentUser.email,
-          isChecked: false, // 알림 확인 여부
-        });
-        setIsFollowing(true);
-      } else if (currentUser && isFollowing) {
+      if (currentUser) {
         const followQuery = await dbService
           .collection("follow_info")
           .where("sender", "==", currentUser.email)
           .where("receiver", "==", data.user_email)
           .get();
-    
-        followQuery.forEach(async (doc) => {
-          await dbService.collection("follow_info").doc(doc.id).delete();
-        });
-        setIsFollowing(false);
+
+        if (!followQuery.empty) {
+          setIsFollowing(true);
+        } else {
+          setIsFollowing(false); // 팔로우 상태를 명확히 설정
+        }
       }
     };
-  
-    return (
-      <div className={style.userItem}>
-        <img
-          src={data.profile_picture}
-          alt={data.user_name}
-          className={style.profile_avatar}
-        />
-        <div className={style.userDetails}>
-          <div className={style.userName}>{data.user_name}</div>
-          <div className={style.userEmail}>@{data.user_email}</div>
-          <div className={style.userBio}>{data.user_bio}</div>
-        </div>
-        {isFollowing ? (
-          <button className={style.followingButton} onClick={handleFollow}>
-            팔로우 중
-          </button>
-        ) : (
-          <button className={style.followButton} onClick={handleFollow}>
-            팔로우하기
-          </button>
-        )}
-      </div>
-    );
+
+    checkFollowingStatus();
+  }, [data.user_email]); // data.user_email이 변경될 때마다 실행
+
+  const handleFollow = async () => {
+    const currentUser = authService.currentUser;
+    if (currentUser && !isFollowing) {
+      await dbService.collection("follow_info").add({
+        receiver: data.user_email,
+        sender: currentUser.email,
+        isChecked: false, // 알림 확인 여부
+      });
+      setIsFollowing(true);
+    } else if (currentUser && isFollowing) {
+      const followQuery = await dbService
+        .collection("follow_info")
+        .where("sender", "==", currentUser.email)
+        .where("receiver", "==", data.user_email)
+        .get();
+
+      followQuery.forEach(async (doc) => {
+        await dbService.collection("follow_info").doc(doc.id).delete();
+      });
+      setIsFollowing(false);
+    }
   };
-  
+
+  return (
+    <div className={style.userItem}>
+      <img
+        src={data.profile_picture}
+        alt={data.user_name}
+        className={style.profile_avatar}
+      />
+      <div className={style.userDetails}>
+        <div className={style.userName}>{data.user_name}</div>
+        <div className={style.userEmail}>@{data.user_email}</div>
+        <div className={style.userBio}>{data.user_bio}</div>
+      </div>
+      {isFollowing ? (
+        <button className={style.followingButton} onClick={handleFollow}>
+          팔로우 중
+        </button>
+      ) : (
+        <button className={style.followButton} onClick={handleFollow}>
+          팔로우하기
+        </button>
+      )}
+    </div>
+  );
+};
 
 export default Friend;

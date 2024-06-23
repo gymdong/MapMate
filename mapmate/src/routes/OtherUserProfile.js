@@ -13,6 +13,7 @@ const OtherUserProfile = ({ userId, onClose }) => {
   const [isHomeModalOpen, setIsHomeModalOpen] = useState(false);
 
   useEffect(() => {
+    //다른 사용자의 프로필을 확인함. 해당 유저가 만든 약속으로 바로 갈 수도 있음
     if (userId) {
       const getUserInfo = async () => {
         const userSnapshot = await dbService
@@ -64,7 +65,11 @@ const OtherUserProfile = ({ userId, onClose }) => {
           &times;
         </button>
         <div className={style.profile_info}>
-          <img className={style.profile_avatar} src={userProfile} alt="Avatar" />
+          <img
+            className={style.profile_avatar}
+            src={userProfile}
+            alt="Avatar"
+          />
           <div className={style.profile_details}>
             <h1>{userName}</h1>
             <p>@{userEmail}</p>
@@ -75,10 +80,16 @@ const OtherUserProfile = ({ userId, onClose }) => {
           <h2>이 사용자가 만든 약속들</h2>
           {meetList.map((meet, idx) => (
             <div key={idx} className={style.tweet}>
-              <p>날짜: {meet.date} 시간: {meet.time}</p>
+              <p>
+                날짜: {meet.date} 시간: {meet.time}
+              </p>
               <p
                 onClick={() => handleOpenHomeModal(meet)}
-                style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+                style={{
+                  color: "blue",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
               >
                 {meet.sendMessage}
               </p>

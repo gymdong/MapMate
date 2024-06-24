@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/gymdong/MapMate/static/css/main.7c83452b.css",
+    "main.js": "/gymdong/MapMate/static/js/main.f284ddda.js",
+    "static/media/banner.png": "/gymdong/MapMate/static/media/banner.dcaa34a26b112a4c8328.png",
+    "index.html": "/gymdong/MapMate/index.html",
+    "main.7c83452b.css.map": "/gymdong/MapMate/static/css/main.7c83452b.css.map",
+    "main.f284ddda.js.map": "/gymdong/MapMate/static/js/main.f284ddda.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7c83452b.css",
+    "static/js/main.f284ddda.js"
+  ]
+}

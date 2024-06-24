@@ -3,9 +3,12 @@ import ReactDOM from "react-dom/client";
 import App from "components/App";
 import { BrowserRouter as Router } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
+const basename =
+  process.env.NODE_ENV === "production" ? process.env.PUBLIC_URL : "";
+
 root.render(
   <React.StrictMode>
-    <Router>
+    <Router basename={basename}>
       <App />
     </Router>
   </React.StrictMode>

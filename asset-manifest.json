@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/gymdong/mapmate/static/css/main.7c83452b.css",
-    "main.js": "/gymdong/mapmate/static/js/main.7e667985.js",
-    "static/media/banner.png": "/gymdong/mapmate/static/media/banner.dcaa34a26b112a4c8328.png",
-    "index.html": "/gymdong/mapmate/index.html",
-    "main.7c83452b.css.map": "/gymdong/mapmate/static/css/main.7c83452b.css.map",
-    "main.7e667985.js.map": "/gymdong/mapmate/static/js/main.7e667985.js.map"
+    "main.css": "/gymdong/MapMate/static/css/main.7c83452b.css",
+    "main.js": "/gymdong/MapMate/static/js/main.216efdb1.js",
+    "static/media/banner.png": "/gymdong/MapMate/static/media/banner.dcaa34a26b112a4c8328.png",
+    "index.html": "/gymdong/MapMate/index.html",
+    "main.7c83452b.css.map": "/gymdong/MapMate/static/css/main.7c83452b.css.map",
+    "main.216efdb1.js.map": "/gymdong/MapMate/static/js/main.216efdb1.js.map"
   },
   "entrypoints": [
     "static/css/main.7c83452b.css",
-    "static/js/main.7e667985.js"
+    "static/js/main.216efdb1.js"
   ]
 }

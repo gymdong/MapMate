@@ -152,7 +152,7 @@ const Home = ({ handleCurrentLL }) => {
           center={{ lat: state.center.lat, lng: state.center.lng }}
           style={{ width: "100%", height: "100%" }}
           ispanto={state.ispanto}
-          level={6}
+          level={4}
         >
           <MapMarker //현 위치를 보여주는 마커
             position={state.center}

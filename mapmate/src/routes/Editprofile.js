@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import style from "./EditProfile.module.css";
 import { v4 as uuidv4 } from "uuid";
 import { storageService } from "fbase";
@@ -7,14 +7,36 @@ import { dbService } from "fbase";
 
 function EditProfile({ onClose, changedUser }) {
   const [bio, setBio] = useState("간략한 자기소개를 적어주세요!"); // 디폴트 바이오 변경값
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState(""); //DB에 저장된 아바타
+  const [avatarFile, setAvatarFile] = useState(null); //DB에 저장되는 아바타
+
+  useEffect(() => {
+    // 현재 사용자 정보를 가져와 상태를 업데이트
+    const fetchUserInfo = async () => {
+      const user = authService.currentUser;
+      if (user) {
+        const userInfo = await dbService
+          .collection("user_info")
+          .where("user_id", "==", user.uid)
+          .get();
+
+        userInfo.forEach((doc) => {
+          const data = doc.data();
+          setBio(data.user_bio || "간략한 자기소개를 적어주세요!");
+          setAvatar(data.profile_picture || "");
+        });
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const handleBioChange = (event) => {
     setBio(event.target.value);
   };
 
   const handleSubmitAvatar = async (event) => {
-    if (avatar === "") {
+    if (!avatarFile) {
       // 아바타가 변경되지 않은 경우 bio만 업데이트되게끔
       dbService
         .collection("user_info")
@@ -48,7 +70,7 @@ function EditProfile({ onClose, changedUser }) {
     const attachmentRef = storageService
       .ref()
       .child(`${authService.currentUser.uid}/${uuidv4()}`);
-    const response = await attachmentRef.putString(avatar, "data_url");
+    const response = await attachmentRef.put(avatarFile);
     const attachmentUrl = await response.ref.getDownloadURL();
 
     dbService
@@ -79,11 +101,12 @@ function EditProfile({ onClose, changedUser }) {
       });
   };
 
-  const handleAvatarChange = async (event) => {
+  const handleAvatarChange = (event) => {
     const {
       target: { files },
     } = event;
     const file = files[0];
+    setAvatarFile(file);
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
       const {
